@@ -1,0 +1,710 @@
+%% ************************************************
+%% Universidade Nova de Lisboa
+%% NOVA Information Management School
+%% Computação em Estatística e Gestão de Informação
+%% Júlio Caineta, 2016
+%% ************************************************
+\documentclass{exam}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage[portuguese]{babel}
+\usepackage[hidelinks,pdfusetitle]{hyperref}
+\author{Júlio Caineta}
+\title{CEGI 2015/2016 - Exercícios 2}
+\usepackage{lastpage}
+\usepackage{minted}
+%\usepackage{color}
+\cfoot{Página \thepage\ de \pageref{LastPage}}
+\renewcommand{\solutiontitle}{\noindent\textbf{Solução:}\par\noindent}
+\newminted{r}{autogobble}
+\newmintinline{r}{}
+ 
+\printanswers
+%\shadedsolutions
+
+\begin{document}
+ 
+\begin{center}
+	\textsc {\small NOVA IMS -- Universidade Nova de Lisboa} \\
+	\textsc {Computação em Estatística e Gestão de Informação -- 2º Semestre 2015/16}
+	\vspace{5mm} \\
+	{\large Exercícios 2}
+\end{center}
+ 
+\vspace{5mm}
+
+\section{Factores}
+
+Em diversos contextos, pode ser necessário lidar com um tipo de dados que não seja numérico, mas que o seu valor possa ser avaliado qualitativamente.
+
+Por exemplo, num inquérito feito aos alunos, considere a questão: ``O que acha dos docentes de CEGI?'', tendo as seguintes hipóteses de escolha ``a) Terríveis'', ``b) \href{http://www.urbandictionary.com/define.php?term=Meh}{Meh.}'', ``c) \href{http://www.urbandictionary.com/define.php?term=uber-cool}{über-cool!}''. Este tipo de dados é então denominado categórico ou nominal.
+Neste caso em particular, têm ainda uma relação de ordem: 
+
+\begin{center}
+	``Terríveis'' $<$ ``\href{http://www.urbandictionary.com/define.php?term=Meh}{Meh.}'' $<$ ``\href{http://www.urbandictionary.com/define.php?term=uber-cool}{über-cool!}''.
+\end{center}
+
+Em \textbf{R}, existe um tipo de dados indicado para estes casos, mais conveniente e vantajoso do que apenas ter um vector de caracteres: \rinline{factor}.
+ 
+\begin{questions}
+	
+\question Fez-se um levantamento de algumas características fisionómicas dos alunos de uma turma. Crie um vector de factores, \rinline{cor.olhos}, a partir do seguinte vector:
+
+\begin{rcode}
+	c("azul", "castanho", "castanho", "castanho", "verde", "azul", "castanho")
+\end{rcode}
+
+\begin{solution}
+	Para criar um vector de factores, a partir de um vector existente, usa-se a função \rinline{factor()}.
+		\begin{rcode}
+			> cor.olhos = factor(c("azul", "castanho", "castanho", "castanho", "verde",
+			+ "azul", "castanho"))
+			> cor.olhos
+			[1] azul     castanho castanho castanho verde    azul     castanho
+			Levels: azul castanho verde
+		\end{rcode}
+\end{solution}
+
+\question Verifique os níveis (categorias) criados.
+\begin{solution}
+	
+	\begin{rcode}
+		> levels(cor.olhos)
+		[1] "azul"     "castanho" "verde"   
+	\end{rcode}
+\end{solution}
+
+\question Um outro conjunto de alunos foi registado no seguinte vector:
+\begin{rcode}
+	c("castanho", "castanho", "azul")
+\end{rcode}
+Defina os factores para este vector, mantendo os mesmos níveis.
+
+\begin{solution}
+	Neste caso, para forçar que os níveis iniciais sejam respeitados, é necessário especificá-los através do argumento \rinline{levels}.
+	\begin{rcode}
+		> grupo2 = factor(c("castanho", "castanho", "azul"), levels=levels(cor.olhos))
+		> grupo2
+		[1] castanho castanho azul
+		Levels: azul castanho verde
+	\end{rcode}
+\end{solution}
+
+\question Considerando ainda os mesmos níveis, transforme em factores os dados de um terceiro grupo de alunos:
+
+\begin{rcode}
+	c("azul", "castanho", "cinzento", "castanho")
+\end{rcode}
+
+O que aconteceu ao elemento na 3ª posição?
+
+\begin{solution}
+	\begin{rcode}
+		> grupo3 = factor(c("azul", "castanho", "cinzento", "castanho"),
+		+ levels=levels(cor.olhos))
+		> grupo3
+		[1] azul     castanho <NA>     castanho
+		Levels: azul castanho verde
+	\end{rcode}
+	A categoria \rinline{"cinzento"} não existe nos níveis que estão a ser impostos, logo o elemento correspondente é convertido para \rinline{NA} no vector de factores.
+\end{solution}
+
+\question No vector \rinline{gen} registou-se o género dos alunos:
+\begin{rcode}
+	gen = c("m", "f", "m", "m", "f", "f", "m")
+\end{rcode}
+
+Crie uma tabela de contingência\footnote{\url{https://pt.wikipedia.org/wiki/Tabela_de_conting\%C3\%AAncia}}, mostrando a cor dos olhos por sexo.
+
+\begin{solution}
+	\begin{rcode}
+		> (tabela = table(gen, cor.olhos))
+		cor.olhos
+		gen azul castanho verde
+		f    1        1     1
+		m    1        3     0
+	\end{rcode}
+	Os vectores passados para a função \rinline{table} não têm que ser obrigatoriamente constituídos por factores. Neste caso, a tabela de contingência está a ser criada através um um vector com caracteres e outro com factores.
+\end{solution}
+
+\question Crie duas tabelas de frequências marginais, uma mostrando o número total de homens e mulheres, outra mostrando as contagens pela cor dos olhos.
+
+\begin{solution}
+	Este problema tem duas soluções semelhantes. Uma consiste em repetir a solução da questão anterior, passando como argumento apenas um dos vectores. A outra solução, aqui mostrada, parte da tabela resultante da solução anterior.
+	\begin{rcode}
+		# número total de homens e mulheres
+		> margin.table(tabela,1)
+		gen
+		f m 
+		3 4 
+		# contagens pela cor dos olhos
+		> margin.table(tabela,2)
+		cor.olhos
+		azul castanho    verde 
+		2        4        1 
+	\end{rcode}
+\end{solution}
+
+\question Seleccione os primeiros três elementos do vector \rinline{cor.olhos}. O que aconteceu aos níveis? Como manter apenas os níveis dos elementos seleccionados?
+
+\begin{solution}
+	\begin{rcode}
+		> cor.olhos[1:3]
+		[1] azul     castanho castanho
+		Levels: azul castanho verde
+	\end{rcode}
+	Ao indexar um ou mais itens de um vector de factores, os níveis são mantidos. Para forçar que sejam considerados apenas os níveis correspondentes aos elementos seleccionados, é necessário usar o argumento \rinline{drop}.
+	\begin{rcode}
+		> cor.olhos[1:3, drop=TRUE]
+		[1] azul     castanho castanho
+		Levels: azul castanho
+	\end{rcode}
+\end{solution}
+
+\question Por fim, guardou-se a informação contendo a altura dos alunos no vector \rinline{alturas}. Esta informação é qualitativa, mas tem relação de ordem.
+\begin{rcode}
+	alturas = c("baixo", "baixo", "médio", "alto", "alto", "médio", "médio")
+\end{rcode}
+Transforme em factores, mantendo a relação de ordem. Compare a altura entre dois alunos.
+
+\begin{solution}
+	\begin{rcode}
+		> alturas = c("baixo", "baixo", "médio", "alto", "alto", "médio", "médio")
+		> alturas = factor(alturas, levels=c("baixo", "médio", "alto"), ordered=TRUE)
+		> alturas
+		[1] baixo baixo médio alto  alto  médio médio
+		Levels: baixo < médio < alto
+		> alturas[1] > alturas[2]
+		[1] FALSE
+		> alturas[1] > alturas[3]
+		[1] FALSE
+		> alturas[1] >= alturas[2]
+		[1] TRUE
+		> alturas[3] <= alturas[6]
+		[1] TRUE
+	\end{rcode}
+	Estas comparações não seriam possíveis caso não se tivesse usado o argumento \rinline{ordered}.
+\end{solution}
+
+\end{questions}
+
+\section{Matrizes}
+\label{matrizes}
+
+\begin{questions}
+\question Uma matriz é uma extensão de um vector para duas dimensões. Na verdade, em \textbf{R}, um vector não tem dimensão. Considere o seguinte vector, que contém a pauta de uma disciplina:
+\begin{rcode}
+notas = as.integer(rnorm(20, 12, 4))
+\end{rcode}
+Verifique as suas dimensões, usando a função \rinline{dim()}. Transforme-o numa matriz \rinline{pauta}, com 4 linhas e 5 colunas. Verifique agora as dimensões da matriz criada.
+
+\begin{solution}
+	\begin{rcode}
+		> dim(v)
+		NULL
+		> pauta = matrix(v, 4, 5)
+		> dim(pauta)
+		[1] 4 5
+	\end{rcode}
+\end{solution}
+
+\question Junte nomes às linhas e às colunas da matriz \rinline{pauta}, em dois passos distintos.
+
+\begin{solution}
+	\begin{rcode}
+		> rownames(pauta) = paste(rep("Aluno", 4), 1:4)
+		> colnames(pauta) = letters[1:5]
+		> pauta
+		         a  b  c  d  e
+		Aluno 1  5  8  6  6 21
+		Aluno 2 13 15 12 19 11
+		Aluno 3 19 15 13 14  8
+		Aluno 4 11 11  4  8 13
+	\end{rcode}
+\end{solution}
+
+\question Aceda aos elementos da matriz de diferentes formas:
+\begin{itemize}
+\item duas posições
+\item dois nomes
+\item uma posição e um nome
+\item uma linha inteira pela posição
+\item uma coluna inteira pelo nome
+\item primeiras 3 linhas, todas as colunas excepto a última
+\end{itemize}
+
+\begin{solution}
+	\begin{rcode}
+		# 2ª linha, 3ª coluna
+		> pauta[2, 3]
+		[1] 12
+		# linha "Aluno 3", coluna "d"
+		> pauta["Aluno 3", "d"]
+		[1] 14
+		# 4ª linha, coluna "a"
+		> pauta[4, "a"]
+		[1] 11
+		# 3ª linha completa
+		> pauta[3, ]
+		a  b  c  d  e 
+		19 15 13 14  8 
+		# coluna "e" completa
+		> pauta[ , "e"]
+		Aluno 1 Aluno 2 Aluno 3 Aluno 4 
+		21      11       8      13 
+		# primeiras 3 linhas, todas as colunas excepto a última (5ª)
+		> pauta[1:3, -5]
+		         a  b  c  d
+		Aluno 1  5  8  6  6
+		Aluno 2 13 15 12 19
+		Aluno 3 19 15 13 14
+	\end{rcode}
+\end{solution}
+
+\question Junte uma nova coluna à matriz. Verifique agora os nomes das colunas da matriz. Como adicionar um nome à coluna recentemente adicionada?
+
+\begin{solution}
+	\begin{rcode}
+		> pauta = cbind(pauta, 10:13)
+		# a coluna é acrescentada mas fica sem nome atribuído
+		> pauta
+		         a  b  c  d  e   
+		Aluno 1  5  8  6  6 21 10
+		Aluno 2 13 15 12 19 11 11
+		Aluno 3 19 15 13 14  8 12
+		Aluno 4 11 11  4  8 13 13
+		> colnames(pauta)
+		[1] "a" "b" "c" "d" "e" "" 
+		> colnames(pauta)[6]
+		[1] ""
+		# aceder ao nome dessa coluna e modificá-lo
+		> colnames(pauta)[6] = "f"
+		> pauta
+		         a  b  c  d  e  f
+		Aluno 1  5  8  6  6 21 10
+		Aluno 2 13 15 12 19 11 11
+		Aluno 3 19 15 13 14  8 12
+		Aluno 4 11 11  4  8 13 13
+	\end{rcode}
+\end{solution}
+
+\question Junte uma nova linha à matriz, atribuindo-lhe logo um nome.
+\begin{solution}
+	\begin{rcode}
+		> pauta = rbind(pauta, "Aluno 5"=sample(v,6))
+		> pauta
+		         a  b  c  d  e  f
+		Aluno 1  5  8  6  6 21 10
+		Aluno 2 13 15 12 19 11 11
+		Aluno 3 19 15 13 14  8 12
+		Aluno 4 11 11  4  8 13 13
+		Aluno 5  6 19  5 21  8  8
+	\end{rcode}
+	Nota: a função \rinline{sample()} está a ser usada apenas para obter um conjunto de notas aleatoriamente, a partir do vector \rinline{v}.
+\end{solution}
+
+\question Calcule a média dos valores em cada linha e em cada coluna.
+\begin{solution}
+	\begin{rcode}
+		# por linha
+		> rowMeans(pauta)
+		  Aluno 1   Aluno 2   Aluno 3   Aluno 4   Aluno 5 
+		 9.333333 13.500000 13.500000 10.000000 11.166667 
+		# por coluna
+		> colMeans(pauta)
+		   a    b    c    d    e    f 
+		10.8 13.6  8.0 13.6 12.2 10.8 
+	\end{rcode}
+\end{solution}
+
+%\question Crie o vector \rinline{final}, em que cada elemento tem o valor médio da linha correspondente, mas apenas no caso deste valor ser positivo ($\geq 10$), caso contrário, introduza o valor especial \rinline{NA}. Junte o vector \rinline{final} à matriz \rinline{pauta}.
+%\begin{solution}
+%	\begin{rcode}
+%		> final = ifelse(rowMeans(pauta) >= 10, rowMeans(pauta), NA)
+%		> pauta = cbind(pauta, final)
+%		> pauta
+%		         a  b  c  d  e  f    final
+%		Aluno 1  5  8  6  6 21 10       NA
+%		Aluno 2 13 15 12 19 11 11 13.50000
+%		Aluno 3 19 15 13 14  8 12 13.50000
+%		Aluno 4 11 11  4  8 13 13 10.00000
+%		Aluno 5  6 19  5 21  8  8 11.16667
+%	\end{rcode}
+%\end{solution}
+
+\question Experimente avaliar o resultado de algumas operações algébricas sobre a seguinte matriz:
+\begin{rcode}
+	ma = matrix(as.integer(runif(16, 1, 20)), 4, 4)
+\end{rcode}
+Exemplos:
+\begin{itemize}
+\item \rinline{ma + 1}
+\item \rinline{ma * 2}
+\item \rinline{ma * ma}
+\item \rinline{ma %*% ma}
+\item determinante, com a função \rinline{det()}
+\item transposta, com a função \rinline{t()}
+\item inverter, com a função \rinline{solve()}
+\end{itemize}
+
+\begin{solution}
+	\begin{rcode}
+		> ma = matrix(as.integer(runif(16, 1, 20)), 4, 4)
+		> ma
+		      [,1] [,2] [,3] [,4]
+		[1,]   11   13   14    1
+		[2,]   19    8   16   11
+		[3,]   11    5   18   18
+		[4,]   11    1   14    6
+		> ma + 1
+		     [,1] [,2] [,3] [,4]
+		[1,]   12   14   15    2
+		[2,]   20    9   17   12
+		[3,]   12    6   19   19
+		[4,]   12    2   15    7
+		> ma * 2
+		     [,1] [,2] [,3] [,4]
+		[1,]   22   26   28    2
+		[2,]   38   16   32   22
+		[3,]   22   10   36   36
+		[4,]   22    2   28   12
+		> ma %*% ma
+		     [,1] [,2] [,3] [,4]
+		[1,]  533  318  628  412
+		[2,]  658  402  836  461
+		[3,]  612  291  810  498
+		[4,]  360  227  506  310
+		> det(ma)
+		[1] 16476
+		> t(ma)
+		     [,1] [,2] [,3] [,4]
+		[1,]   11   19   11   11
+		[2,]   13    8    5    1
+		[3,]   14   16   18   14
+		[4,]    1   11   18    6
+		> solve(ma)
+		            [,1]        [,2]        [,3]          [,4]
+		[1,] -0.04685603  0.12066035 -0.07137655  0.0007283321
+		[2,]  0.06724933  0.01335276  0.02731245 -0.1176256373
+		[3,]  0.04855547 -0.10949260  0.02603787  0.1145302258
+		[4,] -0.03860160  0.03204661  0.06554989 -0.0823015295
+		
+	\end{rcode}
+\end{solution}
+
+%\question Resolva o seguinte sistema de equações em \textbf{R}:
+%\begin{align*}
+%\left\{\begin{matrix}
+%-4x & + & 0.3y & = & 12.3 \\
+%54.3x & - & 4y & = & 45
+%\end{matrix}\right.
+%\end{align*}
+%
+%\begin{solution}
+%	\begin{rcode}
+%		> coefs = matrix(c(-4, 0.3, 54.3, -4), nrow=2, ncol=2, byrow=TRUE)
+%		> ys = c(12.3, 45)
+%		> solve(coefs, ys)
+%		[1]  216.2069 2923.7586
+%	\end{rcode}
+%\end{solution}
+
+\end{questions}
+
+\section{Arrays}
+Em \textbf{R}, as matrizes são uma extensão dos vectores para duas dimensões. Os arrays aumentam essa extensão para qualquer número de dimensões. Seguem as mesmas regras e possibilidades de indexação que os vectores e matrizes.
+
+\begin{questions}
+\question Crie um array com 50 elementos, distribuídos por 2 linhas, 3 colunas, e 5 camadas.
+
+\begin{solution}
+	\begin{rcode}
+		array(1:50, dim=c(2, 3, 5))
+	\end{rcode}
+\end{solution}
+
+
+\question Considere a matriz \rinline{pauta} da secção anterior. Junte várias cópias dessa matriz num array, como se, por exemplo, estivesse a agregar as pautas de diferentes anos, num só objecto.
+
+\begin{solution}
+	\begin{rcode}
+		# criar cópias da matriz pauta, com valores ligeiramente diferentes, só para ilustrar
+		pauta2014 = pauta - 1
+		pauta2015 = pauta + 1
+		pauta2016 = pauta * 0.8
+		pautas = array(c(pauta2014, pauta2015, pauta2016), dim=c(4, 5, 3))
+	\end{rcode}
+\end{solution}
+
+\question Experimente aceder a elementos do array do mesmo modo que tentou para a matriz.
+
+\begin{solution}
+	\begin{rcode}
+		# notas de todos os alunos, na 2ª componente, em todos os anos
+		> pautas[, 2, ]
+		[,1] [,2] [,3]
+		[1,]    8   10  7.2
+		[2,]   14   16 12.0
+		[3,]   14   16 12.0
+		[4,]    8   10  7.2
+		# notas dos primeiros 3 alunos, em todas as componentes, ignorando o primeiro ano
+		> pautas[1:3, , -1]
+		, , 1
+		
+		[,1] [,2] [,3] [,4] [,5]
+		[1,]   20   10   17    8   14
+		[2,]   14   16   12    7   14
+		[3,]   11   16    9    7    8
+		
+		, , 2
+		
+		[,1] [,2] [,3] [,4] [,5]
+		[1,] 15.2  7.2 12.8  5.6 10.4
+		[2,] 10.4 12.0  8.8  4.8 10.4
+		[3,]  8.0 12.0  6.4  4.8  5.6
+	\end{rcode}
+\end{solution}
+
+\end{questions}
+
+\section{Listas}
+
+As listas, ao contrário dos vectores, matrizes e arrays, permitem guardar elementos de diferentes tipos (e.g., \rinline{"character"}, \mintinline{r}{"numeric"} e \rinline{"logical"}) num único objecto. Assim, podem ser vistas como uma colecção ordenada de objectos.
+
+Os objectos que constituem uma matriz são designados por componentes, são numerados, e podem ter um nome associado.
+
+Considere, como exemplo, a lista \rinline{estudante}, que corresponde a uma ficha com os seguintes dados de um aluno:
+
+\begin{center}
+\begin{description}
+\item[nro] 1999001
+\item[nome] John Doe
+\item[notas] 14, 3, 12, 10, 19
+\item[inscrito] Sim
+\end{description}
+\end{center}
+
+\begin{questions}
+\question Crie a lista \rinline{estudante} com as informações do aluno.
+\begin{solution}
+	\begin{rcode}
+		 estudante = list(nro=1999001, nome="John Doe", notas=c(14, 3, 12, 10, 19),
+		   inscrito=TRUE)
+	\end{rcode}
+\end{solution}
+
+\question Visualize todos os componentes (ou atributos) da lista. Compare com o resultado da função \rinline{str()}, quando chamada com a mesma lista.
+\begin{solution}
+	\begin{rcode}
+		> estudante
+		$nro
+		[1] 1999001
+		
+		$nome
+		[1] "John Doe"
+		
+		$notas
+		[1] 14  3 12 10 19
+		
+		$inscrito
+		[1] TRUE
+		
+		> str(estudante)
+		List of 4
+		$ nro     : num 2e+06
+		$ nome    : chr "John Doe"
+		$ notas   : num [1:5] 14 3 12 10 19
+		$ inscrito: logi TRUE
+	\end{rcode}
+	A função \rinline{str()} (\textit{structure}) apresenta o conteúdo de um objecto de uma forma mais compacta e fácil de ler.
+\end{solution}
+
+\question Aceda ao primeiro componente da lista, usando a mesma sintaxe que nos vectores. Verifique o tipo de objecto desse resultado, usando a função \rinline{typeof()}.
+
+\begin{solution}
+	\begin{rcode}
+		> estudante[1]
+		$nro
+		[1] 1999001
+		
+		> typeof(estudante[1])
+		[1] "list"
+		> estudante[[1]]
+		[1] 1999001
+		> typeof(estudante[[1]])
+		[1] "double"
+	\end{rcode}
+	Na primeira forma de indexação, o resultado é uma sublista contendo apenas a primeira componente. Na segunda forma, com duplos parêntesis rectos, a indexação resulta no acesso ao conteúdo da primeira componente.
+\end{solution}
+
+\question Corrija o nome do primeiro componente para \rinline{"número"}.
+
+\begin{solution}
+	\begin{rcode}
+		names(estudante)[1] = "número"
+	\end{rcode}
+\end{solution}
+
+\question Recebeu mais um dado do aluno: tem 33 anos de idade. Actualize a sua ficha com essa informação.
+
+\begin{solution}
+	\begin{rcode}
+		estudante$idade = 33
+	\end{rcode}
+\end{solution}
+
+
+\question Acrescente ainda a seguinte informação à ficha do aluno, em apenas um passo:
+
+\begin{description}
+\item[sexo] masculino
+\item[pais] ``Maria'' e ``Zé''
+\end{description}
+
+\begin{solution}
+	\begin{rcode}
+		estudante = c(estudante, list(sexo="m", pais=c("Maria", "Zé")))
+	\end{rcode}
+	Este exemplo ilustra a utilidade da função \rinline{c()}, mostrando que também serve para juntar objectos de outros tipos para além de numéricos. Assim, neste caso, esta função está a ser usada para criar uma lista e não um vector.
+\end{solution}
+
+\question O aluno recebeu a nota de mais um exame: 10 val. Adicione essa nota às restantes notas.
+
+\begin{solution}
+	\begin{rcode}
+		estudante$notas = c(estudante$notas, 10)
+	\end{rcode}
+\end{solution}
+
+\question Quantos componentes já tem a ficha do aluno?
+
+\begin{solution}
+	\begin{rcode}
+		> length(estudante)
+		[1] 7
+	\end{rcode}
+\end{solution}
+
+\end{questions}
+
+\section{Data Frames}
+
+A estrutura de dados \rinline{data.frame} é das mais usadas em \textbf{R}, em boa parte, devido à sua versatilidade no tipo de objectos suportado e na indexação: é um tipo de dados derivado das listas, suportando elementos de diferentes tipo num só objecto; e adiciona as funcionalidades de indexação dos vectores. 
+
+É mais usado para guardar tabelas de dados, sendo parecido com uma matriz com nomes nas linhas e nas colunas, mas suportando elementos de diferentes tipos. Este tipo de tabela pode ser visto como uma tabela de uma base de dados, ou de uma folha de cálculo, em que cada linha corresponde a um registo diferente.
+
+\begin{questions}
+\question Transforme a matriz \rinline{pauta}, criada na secção \ref{matrizes}, num \rinline{data.frame}, e guarde-o na variável \rinline{pautadf}.
+
+\begin{solution}
+	\begin{rcode}
+		pautadf = data.frame(pauta)
+	\end{rcode}
+\end{solution}
+
+\question Repita o exercício 2.3, agora aplicado à \rinline{pautadf}.
+
+\begin{solution}
+	A solução desta alínea é idêntica à do exercício 2.3.
+\end{solution}
+
+\question Determine o número de alunos (linhas) e o número de componentes de avaliação (colunas). No exercício 2.1 referiu-se a função \rinline{dim()}. Procure por uma forma alternativa de encontrar o número de linhas e de colunas no ecrã de ajuda da função \rinline{dim()}.
+
+\begin{solution}
+	\begin{rcode}
+		# número de linhas
+		> nrow(pautadf)
+		[1] 5
+		# número de colunas
+		> ncol(pautadf)
+		[1] 6
+	\end{rcode}
+\end{solution}
+
+%\question Considerando que cada linha corresponde a um aluno diferente, e que cada coluna corresponde a uma componente de avaliação, mostre apenas os alunos que tiveram positiva em todas as componentes.
+%
+%\begin{solution}
+%	Este exercício pode ser resolvido de várias maneiras. Uma delas, pode ser recorrendo a uma instrução iterativa:
+%	\begin{rcode}
+%		aluno = 1
+%		while (aluno <= nrow(pautadf)) {
+%		  if (all(pautadf[aluno, ] >= 10)) {
+%		    print(rownames(pautadf)[aluno])
+%		  }
+%		  aluno = aluno + 1
+%		}
+%		[1] "Aluno 2"
+%	\end{rcode}
+%	No entanto, sendo o \textbf{R} uma linguagem versátil e compatível com o paradigma de programação funcional, é possível resolver este exercício de uma forma mais curta e eficiente (além de elegante):
+%	\begin{rcode}
+%		> rownames(pautadf)[apply(pautadf, 1, function(x) all(x >= 10))]
+%		[1] "Aluno 2"
+%	\end{rcode}
+%\end{solution}
+
+%\question Mostre as componentes em que pelo menos 3 alunos tiveram positiva. \textbf{Dica:} utilize a coerção de valores lógicos para valores numéricos.
+%
+%\begin{solution}
+%	À semelhança do exercício anterior, também este é possível resolver das duas formas referidas.
+%	
+%	Versão imperativa:
+%	\begin{rcode}
+%		for (componente in 1:ncol(pautadf)) {
+%		  if (sum(pautadf[, componente] >= 10) >= 3) {
+%		    print(colnames(pautadf)[componente])
+%		  }
+%		}
+%		[1] "a"
+%		[1] "b"
+%		[1] "d"
+%		[1] "e"
+%		[1] "f"
+%	\end{rcode}
+%	Versão funcional:
+%	\begin{rcode}
+%		> colnames(pautadf)[apply(pautadf, 2, function(x) sum(x >= 10) >= 3)]
+%		[1] "a" "b" "d" "e" "f"
+%	\end{rcode}
+%\end{solution}
+
+%\question Acrescente uma nova coluna à \rinline{pautadf}, em que cada elemento deve tomar o valor \rinline{"Aprovado"} ou o valor \rinline{"Reprovado"}, conforme a média das notas de cada componente seja positiva ($\geq 10$) ou não. \textbf{Dica:} veja como resolveu o exercício 2.7.
+%
+%\begin{solution}
+%	\begin{rcode}
+%		pautadf$estado = ifelse(rowMeans(pautadf) >= 10, "Aprovado", "Reprovado")
+%	\end{rcode}
+%\end{solution}
+
+\question Os alunos foram aleatoriamente distribuídos em dois grupos, conforme mostra o bloco de código em baixo. Explique-o da melhor maneira que conseguir.
+\begin{rcode}
+	Grupos = sample(paste("Grupo",1:2), nrow(pautadf), replace=T)
+	pautadf = data.frame(pautadf, Grupos)
+\end{rcode}
+
+\begin{solution}
+	A solução deste exercício fica para discussão entre os alunos.
+\end{solution}
+
+\question Depois da execução das instruções dadas na alínea anterior, uma nova coluna surge no data frame \rinline{pautadf}. Verifique o tipo de objecto com que os elementos dessa coluna ficaram. O que aconteceu?
+
+\begin{solution}
+	\begin{rcode}
+		> typeof(pautadf$Grupos)
+		[1] "integer"
+		> class(pautadf$Grupos)
+		[1] "factor"
+	\end{rcode}
+	A criação de um \rinline{data.frame} com uma coluna cujos elementos sejam do tipo \rinline{character}, converte essa coluna automaticamente para \rinline{factor}. Pode usar o argumento \rinline{stringsAsFactors}, da função \rinline{data.frame()}, para controlar este comportamento.
+\end{solution}
+
+\question Utilize o editor interactivo, disponibilizado pela função \rinline{edit()}, para alterar alguns valores (à sua escolha) do data frame.
+
+\begin{solution}
+	\begin{rcode}
+		pautadf = edit(pautadf)
+	\end{rcode}
+	Com o editor interactivo, é possível editar o conteúdo das células de uma tabela, como se fosse uma folha de cálculo.
+\end{solution}
+	
+\end{questions}
+\end{document}

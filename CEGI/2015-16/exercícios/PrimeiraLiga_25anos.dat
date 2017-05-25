@@ -1,0 +1,44 @@
+"No."	"Club"	"G"	"W"	"D"	"L"	"F"	"A"	"P"	"S"	"X1"	"X2"	"X3"	"Cup"	"positivo"
+"1"	"FC Porto"	818	588	144	86	1670	534	1908	25	16	5	4	9	TRUE
+"2"	"SL Benfica"	818	517	175	126	1579	665	1726	25	6	9	7	4	TRUE
+"3"	"Sporting CP"	818	477	194	147	1402	685	1625	25	2	8	9	5	TRUE
+"4"	"SC de Braga"	818	336	217	265	1073	936	1225	25	-	1	1	1	TRUE
+"5"	"Vitória SC Guimarães"	788	307	196	285	975	950	1117	24	-	-	2	1	TRUE
+"6"	"CS Marítimo Madeira"	818	299	220	299	1005	1018	1117	25	-	-	-	-	FALSE
+"7"	"Boavista FC"	638	264	189	185	820	641	981	19	1	2	1	2	TRUE
+"8"	"CF Os Belenenses"	660	208	183	269	735	853	807	20	-	-	-	-	FALSE
+"9"	"FC Paços de Ferreira"	651	178	241	232	644	804	775	18	-	-	1	-	FALSE
+"10"	"Vitória FC Setúbal"	648	175	175	298	669	921	700	20	-	-	-	1	FALSE
+"11"	"UD de Leiria"	524	170	146	208	569	672	656	16	-	-	-	-	FALSE
+"12"	"Gil Vicente FC"	566	158	144	264	566	792	618	17	-	-	-	-	FALSE
+"13"	"CD Nacional Madeira"	444	166	112	166	578	572	610	14	-	-	-	-	TRUE
+"14"	"Rio Ave FC"	486	141	149	196	497	617	572	15	-	-	-	-	FALSE
+"15"	"A Académica Coimbra"	512	118	163	231	500	721	517	16	-	-	-	1	FALSE
+"16"	"SC Beira Mar"	460	119	134	207	476	659	491	14	-	-	-	1	FALSE
+"17"	"CF Estrela da Amadora"	430	112	141	177	416	559	477	13	-	-	-	-	FALSE
+"18"	"SC Farense"	374	115	103	156	415	506	448	11	-	-	-	-	FALSE
+"19"	"SC Salgueiros 08"	374	113	102	159	427	556	441	11	-	-	-	-	FALSE
+"20"	"GD Estoril Praia"	264	82	72	110	290	367	318	8	-	-	-	-	FALSE
+"21"	"GD de Chaves"	238	60	57	121	250	381	237	7	-	-	-	-	FALSE
+"22"	"Moreirense FC"	200	53	63	84	206	269	222	6	-	-	-	-	FALSE
+"23"	"A Naval 1º de Maio"	184	49	46	89	160	255	193	6	-	-	-	-	FALSE
+"24"	"FC de Alverca"	170	48	37	85	192	266	181	5	-	-	-	-	FALSE
+"25"	"SC Campomaiorense"	170	48	34	88	186	287	178	5	-	-	-	-	FALSE
+"26"	"SC Olhanense"	150	32	55	63	138	209	151	5	-	-	-	-	FALSE
+"27"	"CF União da Madeira"	136	34	33	69	123	204	135	4	-	-	-	-	FALSE
+"28"	"FC de Tirsense"	102	31	24	47	92	124	117	3	-	-	-	-	FALSE
+"29"	"FC Arouca"	98	28	29	41	101	130	113	3	-	-	-	-	FALSE
+"30"	"FC Penafiel"	136	27	31	78	119	230	112	4	-	-	-	-	FALSE
+"31"	"Leça FC"	102	28	24	50	91	149	108	3	-	-	-	-	FALSE
+"32"	"FC Famalicão"	102	26	28	48	82	160	106	3	-	-	-	-	FALSE
+"33"	"CD Santa Clara"	102	24	31	47	106	150	103	3	-	-	-	-	FALSE
+"34"	"Varzim SC"	102	24	25	53	91	157	97	3	-	-	-	-	FALSE
+"35"	"Leixões SC"	90	21	29	40	82	119	92	3	-	-	-	-	FALSE
+"36"	"SC de Espinho"	68	18	16	34	65	111	70	2	-	-	-	-	FALSE
+"37"	"CD Aves"	64	9	17	38	53	110	44	2	-	-	-	-	FALSE
+"38"	"SCU Torreense"	34	8	11	15	36	43	35	1	-	-	-	-	FALSE
+"39"	"FC Felgueiras"	34	8	9	17	29	47	33	1	-	-	-	-	FALSE
+"40"	"CD Tondela"	34	8	6	20	34	54	30	1	-	-	-	-	FALSE
+"41"	"Portimonense SC"	30	6	7	17	29	49	25	1	-	-	-	-	FALSE
+"42"	"CD Feirense"	30	5	9	16	27	49	24	1	-	-	-	-	FALSE
+"43"	"CD Trofense"	30	5	8	17	25	42	23	1	-	-	-	-	FALSE

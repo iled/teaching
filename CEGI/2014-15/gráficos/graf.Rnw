@@ -1,0 +1,221 @@
+\documentclass{article}
+\usepackage[top=1in, bottom=1.25in, left=1.25in, right=1.25in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage[hidelinks,pdfusetitle]{hyperref}
+\author{Júlio Caineta}
+\title{CEGI 2014/2015 - Exemplos de gráficos em R}
+\newcounter{graph}[section]
+\renewcommand{\thegraph}{\number\numexpr\value{graph}+1\relax.~\stepcounter{graph}}
+
+\begin{document}
+
+\begin{center}
+\textsc {\small NOVA IMS -- Universidade Nova de Lisboa} \\
+\textsc {Computação em Estatística e Gestão de Informação -- 2º Semestre 2014/15}
+\vspace{5mm} \\
+{\large Exemplos de gráficos em \textbf{R}}
+\end{center}
+
+\vspace{5mm}
+
+Este documento apresenta alguns exemplos de como criar e manipular gráficos em \textbf{R}.
+
+
+\section{Univariados}
+
+\thegraph Histograma de uma variável.
+
+<<>>=
+hist(iris$Petal.Width)
+@
+\pagebreak
+\thegraph Histograma com título, legendas nos eixos, e densidade de probabilidade em vez de frequências.
+<<>>=
+hist(iris$Petal.Width, main = "Histograma da Largura da Pétala",
+     xlab = "Largura (cm)", ylab = "Probabilidade", prob = T)
+@
+\pagebreak
+\thegraph Boxplot de uma variável, com título
+<<>>=
+boxplot(iris$Petal.Length, main = "Largura da Pétala")
+@
+\pagebreak
+\thegraph Gráfico de barras com a contagem do número de amostras em cada espécie, cuja pétala tem uma largura superior a 1.
+<<>>=
+barplot(table(subset(iris, Petal.Width > 1)$Species))
+@
+\pagebreak
+\thegraph Boxplots condicionados, mostrando um para cada espécie.
+<<>>=
+boxplot(Petal.Width ~ Species, iris)
+@
+
+\pagebreak
+\section{Três variáveis}
+As seguintes funções usam formas diferentes de representar a terceira variável.
+\begin{itemize}
+\item persp() para produzir superfícies tridimensionais.
+\item countour() para produzir gráficos com curvas de nível.
+\item image() usando cores para representar a 3ª dimensão.
+\end{itemize}
+
+\thegraph Função matemática, com três variáveis, representada em perspectiva.
+<<>>=
+x = seq(-10, 10, length = 30)
+y = x
+f = function(x, y) {
+      r = sqrt(x^2 + y^2)
+      10 * sin(r)/r
+    }
+
+z = outer(x, y, f)
+z[is.na(z)] = 1
+persp(x, y, z, theta = 30, phi = 30, expand = 0.5, col = "lightblue")
+@
+\pagebreak
+\thegraph Carta altimétrica de um vulcão, com a altitude representada por curvas de nível.
+<<>>=
+x = 10 * 1:nrow(volcano)
+y = 10 * 1:ncol(volcano)
+contour(x, y, volcano, col = "red", lty = "solid")
+@
+\pagebreak
+\thegraph Agora com a altitude representada em função da cor (valores mais baixos a vermelho).
+<<>>=
+image(volcano)
+@
+\pagebreak
+\thegraph Sobreposição das duas técnicas anteriores.
+<<>>=
+x = 10 * (1:nrow(volcano))
+y = 10 * (1:ncol(volcano))
+image(x, y, volcano, col = terrain.colors(100))
+contour(x, y, volcano, levels = seq(90, 200, by = 5), add = TRUE, 
+        col = "peru")
+@
+\pagebreak
+\section{Multivariados (suporte para mais de três variáveis)}
+
+\thegraph Cinco variáveis representadas por números e cores.
+<<>>=
+m = matrix(rnorm(100), 20, 5)
+op = par(mfrow = c(1, 2), mar = c(2, 3, 0, 1))
+matplot(m)
+@
+\pagebreak
+\thegraph Igual, mas com uma representação por linhas.
+<<>>=
+matplot(m, type = "l")
+@
+\pagebreak
+\thegraph Gráfico de "estrelas" (\textit{star/spider/radar plot}), com legenda à esquerda,
+reflectindo os valores de várias propriedades de automóveis.
+<<fig.width=7, fig.height=5, fig.align='center'>>=
+stars(mtcars[1:10, 1:7], main = "Motor Trend Cars", key.loc=c(-1.5, 8))
+@
+\pagebreak
+\thegraph Gráfico em mosaico, mostrando a contagem dos sobreviventes do acidente com
+o navio Titanic, discriminada por classe, faixa etária e género.
+<<>>=
+mosaicplot(Titanic, main = "Sobreviventes do Titanic")
+@
+\pagebreak
+\section{Adicionar elementos a gráficos existentes}
+
+\thegraph Adicionar pontos a um gráfico de pontos.
+<<>>=
+plot(rnorm(10))
+points(rnorm(10), col = "red")
+@
+\pagebreak
+\thegraph Adicionar linhas.
+<<echo=-1>>=
+plot(rnorm(10))
+lines(rnorm(10), col = "red")
+@
+\pagebreak
+\thegraph Adicionar uma curva com a estimativa da densidade da distribuição representada.
+<<>>=
+hist(iris$Petal.Width, main = "Histograma da Largura da Pétala", xlab = "", 
+     ylab = "Probabilidade", prob = T)
+lines(density(iris$Petal.Width))
+@
+\pagebreak
+\thegraph Desenhar uma linha horizontal, representando a média dos pontos no gráfico.
+<<>>=
+x = rnorm(10)
+plot(x)
+abline(h = mean(x), col = "green", lty = 2)
+@
+\pagebreak
+\thegraph Agora uma linha vertical.
+<<echo=-(1:2)>>=
+plot(x)
+abline(h = mean(x), col = "green", lty = 2)
+abline(v = 3, col = "blue", lty = 4)
+@
+\pagebreak
+\thegraph A mesma função também suporta serve para representar linhas diagonais.
+<<echo=-(1:3)>>=
+plot(x)
+abline(h = mean(x), col = "green", lty = 2)
+abline(v = 3, col = "blue", lty = 4)
+abline(-0.3, 0.5, col = "red", lty = 3)
+@
+\pagebreak
+\thegraph Adicionar texto em cima dos pontos do gráfico, de acordo com o respectivo valor.
+<<>>=
+y = rnorm(10)
+plot(y)
+text(1:10, y, ifelse(y > 0, "pos", "neg"))
+@
+\pagebreak
+\thegraph Colocar texto nas margens do gráfico.
+<<>>=
+plot(y)
+mtext("margem de baixo", side = 1)
+mtext("margem de baixo (na 2ª linha)", side = 1, line = 1)
+mtext("margem esquerda", side = 2)
+mtext("margem direita", side = 4)
+mtext("margem de cima", side=3)
+@
+\pagebreak
+\thegraph Adicionar uma seta, seguida de texto, a um gráfico de linhas.
+<<>>=
+plot(1:6, c(10, 20, 23, 16, 18, 25), type = "l", col = "green")
+arrows(2, 12, 4, 15.7, col = "red")
+text(2, 12, "descida estranha!", pos = 1)
+@
+\pagebreak
+\thegraph Adicionar título e legendas a um gráfico com duas variáveis representadas em linhas.
+<<>>=
+plot(rnorm(10), type = "l")
+lines(rnorm(10), col = "red", lty = 2)
+title("Números aleatórios")
+legend("topright", c("1ª Série", "2ª Série"), lty = 1:2, col = 1:2)
+@
+\pagebreak
+\section{Configurar a janela}
+
+\thegraph Dividir a janela em quatro partes iguais, colocando um gráfico de linhas em cada uma delas.
+<<>>=
+par(mfrow = c(2, 2))
+for (i in 1:4) plot(rnorm(10), col = i, type = "l")
+@
+\pagebreak
+\thegraph Outra forma de dividir a janela em quatro partes iguais, mostrando, de seguida, uma pré-visualização da disposição criada.
+<<>>=
+layout(matrix(1:4, 2, 2))
+layout.show(4)
+@
+\pagebreak
+\thegraph A função anterior também permite criar divisões com diferentes dimensões, por exemplo duas divisões, em que a primeira tem o dobro do tamanho da segunda.
+<<>>=
+layout(matrix(1:2, 2, 2), heights = c(2, 1))
+layout.show(2)
+plot(rnorm(10), type="l", col="gray")
+plot(rnorm(10), type="l", col="purple")
+@
+
+\end{document}

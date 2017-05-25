@@ -1,0 +1,285 @@
+% !TeX spellcheck = pt
+
+%% ************************************************
+%% Universidade Nova de Lisboa
+%% NOVA Information Management School
+%% Computação em Estatística e Gestão de Informação
+%% Júlio Caineta, 2015
+%% ************************************************
+\documentclass[addpoints]{exam}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage[portuguese]{babel}
+\usepackage[hidelinks,pdfusetitle]{hyperref}
+\author{Júlio Caineta}
+\title{CEGI 2014/2015 - Exame 2ª Época - Versão A}
+\usepackage{lastpage}
+\usepackage{minted}
+\usepackage{gensymb}
+\usepackage{wrapfig}
+\usepackage{tabulary}
+\usepackage{graphicx}
+\usepackage{xfrac}
+\usepackage{multirow}
+\usepackage[phantomtext]{dashundergaps}
+%\usepackage{color}
+%\usepackage{draftwatermark}
+%\SetWatermarkText{RASCUNHO}
+%\SetWatermarkScale{3}
+%\SetWatermarkLightness{0.7}
+\cfoot{Página \thepage\ de \pageref{LastPage}}
+\renewcommand{\solutiontitle}{\noindent\textbf{Solução:}\par\noindent}
+\pointpoints{valor}{valores}
+\pointsinrightmargin
+\bracketedpoints
+\marginpointname{ val.}
+\renewcommand*\half{.5}
+\hqword{Pergunta}
+\hpgword{Página}
+\hpword{Cotação}
+\hsword{Cotação obtida}
+\htword{Total}
+\newminted{r}{autogobble}
+\newmintinline{r}{}
+ 
+\printanswers
+%\shadedsolutions
+
+%\titlegraphic{}
+
+\begin{document}
+	
+\noindent\begin{minipage}{0.2\textwidth}% adapt widths of minipages to your needs
+	\includegraphics[width=2cm]{logo.png}
+\end{minipage}
+\hfill
+\begin{minipage}{0.8\textwidth}
+	\begin{center}
+		\textsc {\small NOVA IMS -- Universidade Nova de Lisboa} \\
+		\textsc {Computação em Estatística e Gestão de Informação -- 2º Semestre 2014/15}
+	\end{center}
+\end{minipage}
+
+\begin{center}
+%	\vspace{5mm} \\
+	{\large Exame 2ª Época -- Versão A -- 20/07/2015}
+\end{center}
+ 
+\vspace{5mm}
+\makebox[\textwidth]{Curso: \underline{\phantom{XXXXX}} Número: \underline{\phantom{XXXXXXXX}} Nome:\enspace\hrulefill}
+\vspace{5mm}
+
+{{\large\textbf{Leia, por favor, com atenção:}}
+\begin{enumerate}
+	\item Este enunciado corresponde à primeira parte do exame (\textbf{R}). O enunciado da segunda parte (SAS) será entregue após o aluno entregar a resolução da primeira parte.
+	\item Cada parte está cotada para 10 valores e tem a nota mínima de 4 valores. 
+	\item Esta parte deverá ser realizado com acesso a um computador com o programa \textbf{R} instalado. Só poderá aceder ao programa \textbf{R} e ao sistema de ajuda do mesmo.
+	\item Os dados necessários para resolver os problemas já se encontram disponíveis na sua instalação do \textbf{R}.
+	\item É proibido o uso de qualquer material de apoio (livros, apontamentos, telemóvel), assim como a troca de qualquer informação com os colegas.
+	\item Deverá escrever o seu nome, número e curso no cabeçalho desta folha.
+	\item As respostas às questões deverão ser dadas, exclusivamente, na folha do enunciado, no espaço reservado para tal. Estas respostas deverão ser código em \textbf{R}.
+	\item O não cumprimento de alguma das regras conduzirá à anulação do exame.
+	\item A duração do exame, considerando ambas as partes, é de \textbf{2 horas}.
+\end{enumerate}
+
+\vspace{10mm}
+
+\begin{questions}
+	\question O vector \rinline{precip} contém a precipitação (chuva) média anual, em polegadas (in), de 70 cidades norte americanas.
+	
+	\begin{parts}
+		\part[1] Encontre as cidades, e respectivos valores de precipitação, com os 5\% valores de precipitação média anual mais elevados.%~\makeemptybox{1in}
+		
+			\begin{solution}
+				\begin{rcode}
+					> subset(precip, precip >= quantile(precip, 0.95))
+					Mobile       Miami New Orleans    San Juan 
+					67.0        59.8        56.8        59.2 
+				\end{rcode}
+			\end{solution}
+			
+		\part[0\half] Em Portugal, a unidade de medida mais usada para precipitação é o milímetro. Sabendo que 1~in~=~25.4~mm, defina uma função que recebe um vector com valores de precipitação em in, e devolve um vector com valores de precipitação em mm. Converta os valores do vector  \rinline{precip} para mm.%~\makeemptybox{1.3in}
+		
+		\begin{solution}
+			\begin{rcode}
+				in2cm = function(precip) {
+				  precip * 25.4
+				}
+				in2cm(precip)
+			\end{rcode}
+		\end{solution}
+		
+		\part[1] Utilize a função \rinline{strsplit} para separar os nomes dos elementos do vector \rinline{precip} por palavras (espaços existentes nos nomes). Guarde o resultado numa nova variável denominada \rinline{cidades}.%~\makeemptybox{1.3in}
+		
+		\begin{solution}
+			\begin{rcode}
+				cidades = strsplit(names(precip), " ")
+			\end{rcode}
+		\end{solution}
+		
+		\part[1\half] Liste os nomes das cidades, existentes no vector \rinline{precip}, cujos nomes são compostos por mais de duas palavras. \textbf{Sugestão:} utilize a lista cidades, criada na alínea anterior.%~\makeemptybox{1.4in}
+		
+		\begin{solution}
+			\begin{rcode}
+				> names(precip)[sapply(cidades, function(x) length(x) > 2)]
+				[1] "Sault Ste. Marie" "Salt Lake City" 
+			\end{rcode}
+		\end{solution}
+			
+	\end{parts}
+	
+%	\question[0\half] Considere o seguinte conteúdo de um ficheiro de nome \textit{notas.dat}:
+%	
+%	\begin{minted}{text}
+%		Nome-AM2-CEGI-DP1-Est1-ISC-Mrkt
+%		Geraldo-12,1-14,4-15,2-11,7-10,0-15,5
+%		Justino-8,2-6,6-12,3-9,9-13,1-16,7
+%		Felisberta-13,3-13,3-13,3-13,3-13,3-13,3
+%		Enzo-18,0-19,0-20,0-17,0-19,0-15,0
+%		Toninha-10,0-11,1-12,2-13,3-14,4-15,5
+%	\end{minted}
+%	
+%	Escreva o código necessário para guardar o conteúdo deste ficheiro num \rinline{data.frame} com 5 linhas e 7 colunas.%~\makeemptybox{1in}
+%	
+%	\begin{solution}
+%		\begin{rcode}
+%			notas = read.table(notas.dat, header=T, sep="-", dec=",")
+%		\end{rcode}
+%	\end{solution}
+	
+	\question O objecto \rinline{Orange} tem 35 linhas e 3 colunas com registos do crescimento de laranjeiras. As variáveis disponibilizadas são:
+	
+	\begin{description}
+		\item[Tree] \rinline{factor} ordenado que indica em que árvore foi efectuada a medição.
+		\item[age] Idade da árvore, dada em dias.
+		\item[circumference] Perímetro do tronco da árvore, em mm.
+	\end{description}
+	
+	\begin{parts}
+		\part[1] Calcule o perímetro médio das laranjeiras, para cada idade registada. Não utilize uma estrutura iterativa.%~\makeemptybox{1.3in}
+		
+			\begin{solution}
+				\begin{rcode}
+					by(Orange$circumference, Orange$age, mean)
+				\end{rcode}
+				ou
+				\begin{rcode}
+					aggregate(Orange, list(Orange$age), mean)
+				\end{rcode}
+			\end{solution}
+			
+\pagebreak
+
+		\part[2] Assuma que a Taxa de Crescimento ($t_c$)  de uma laranjeira é dada pela \autoref{tc}.
+		
+		\begin{equation}
+			\label{tc}
+			t_c = \frac{\text{circumference}}{\text{age}}
+		\end{equation}
+		
+		Sem recorrer a um ciclo (explicitamente), calcule a $t_c$ em cada registo. Qual é a árvore com maior Taxa de Crescimento média?%~\makeemptybox{1.3in}
+		
+		\begin{solution}
+			\begin{rcode}
+				orange_tc = transform(Orange, tc = circumference / age)
+				> which.max(by(orange_tc$tc, orange_tc$Tree, mean))
+				4 
+				5 
+			\end{rcode}
+			A árvore com maior Taxa de Crescimento é a 4.
+		\end{solution}
+	\end{parts}
+	
+	\question O \rinline{data.frame LifeCycleSavings} contém informações sobre as poupanças das populações, em 50 países, na década de 1960. Considere apenas as colunas \rinline{pop15} e \rinline{pop75}, relativas às percentagens da população abaixo de 15 e acima de 75 anos, respectivamente.
+	
+	\begin{parts}
+		\part[1] O rácio entre \rinline{pop75} e \rinline{pop15} ($t_e$) é um possível indicador de que a população de um país está envelhecida (\autoref{te}). Crie uma nova tabela, contendo apenas os países em que $t_e >\overline{t_e} + \sigma(t_e)$.
+		
+		\begin{equation}
+			\label{te}
+			t_e = \frac{\text{pop75}}{\text{pop15}}
+		\end{equation}%~\makeemptybox{1.3in}
+		
+		\begin{solution}
+			\begin{rcode}
+				> te = LifeCycleSavings$pop75 / LifeCycleSavings$pop15
+				> subset(LifeCycleSavings, te > mean(te) + sd(te))
+				sr pop15 pop75     dpi ddpi
+				Austria        12.07 23.32  4.41 1507.99 3.93
+				Belgium        13.17 23.80  4.43 2108.47 3.82
+				Denmark        16.85 24.42  3.93 2496.53 3.99
+				France         12.64 25.06  4.70 2213.82 4.52
+				Germany        12.55 23.31  3.35 2457.12 3.44
+				Italy          14.28 24.52  3.48 1390.00 3.54
+				Luxembourg     10.35 21.80  3.73 2449.39 1.57
+				Norway         10.25 25.95  3.67 2231.03 3.62
+				Sweden          6.86 21.44  4.54 3299.49 3.01
+				Switzerland    14.13 23.49  3.73 2630.96 2.70
+				United Kingdom  7.81 23.27  4.46 1813.93 2.01
+			\end{rcode}
+		\end{solution}
+		
+		\part[0\half] Construa um gráfico que permita identificar o mesmo conjunto de países (não é necessário desenhar o gráfico na folha).%~\makeemptybox{1.3in}
+		
+		\begin{solution}
+			\begin{rcode}
+				barplot(te)
+				abline(h = mean(te) + sd(te), las = 2, space = .5))
+			\end{rcode}
+			Gráfico de barras com uma linha horizontal que permite identificar a condição requerida. Os dois últimos argumentos são opcionais.
+		\end{solution}
+	\end{parts}
+	
+\pagebreak
+	
+	\question Para resolver os próximos exercícios, considere o seu número mecanográfico (número de aluno).
+	
+	\begin{parts}
+		\part[1] Crie um conjunto de 10 números aleatórios, \rinline{x}, a partir da seguinte distribuição:
+		
+		\begin{equation*}
+			Norm(\mu = xxxx, \sigma= yyy)
+		\end{equation*}
+		
+		em que $xxxx$ são os primeiros quatro dígitos do seu número mecanográfico, e $yyy$ são os restantes três dígitos.%~\makeemptybox{1.4in}
+		
+		\begin{solution}
+			\begin{rcode}
+				x = rnorm(n = 10, mean = 1999, sd = 123)
+			\end{rcode}
+		\end{solution}
+				
+		\part[0\half] A partir do conjunto criado na alínea anterior, crie um novo conjunto \rinline{y}, com igual número de elementos, através da seguinte linha de código:
+		
+		\begin{rcode}
+			y = sample(x, 10, rep=T)
+		\end{rcode}
+		
+		Verifique se as médias de \rinline{x} e \rinline{y} são iguais e explique porquê.
+		
+		\textbf{Nota:} se não resolveu a alínea anterior, considere \rinline{x = seq(1234, 4321, length=10)}.%~\makeemptybox{1.4in}
+		
+		\begin{solution}
+			\begin{rcode}
+				> y=sample(x, 10, rep=T)
+				> mean(x)
+				[1] 2007.595
+				> mean(y)
+				[1] 1995.478
+			\end{rcode}
+			
+			As médias são diferentes porque, apesar dos dois vectores terem o mesmo número de elementos, \rinline{y} foi criado a partir de uma amostragem com reposição, sendo, então, mais provável existirem elementos repetidos.
+		\end{solution}
+	
+	\end{parts}
+		
+	
+\end{questions}
+
+\vspace{5mm}
+%\centerline
+	\begin{center}
+		\gradetable[h][questions]
+	\end{center}
+	
+\end{document}

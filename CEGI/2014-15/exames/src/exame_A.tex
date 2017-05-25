@@ -1,0 +1,307 @@
+% !TeX spellcheck = pt
+
+%% ************************************************
+%% Universidade Nova de Lisboa
+%% NOVA Information Management School
+%% Computação em Estatística e Gestão de Informação
+%% Júlio Caineta, 2015
+%% ************************************************
+\documentclass[addpoints]{exam}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage[portuguese]{babel}
+\usepackage[hidelinks,pdfusetitle]{hyperref}
+\author{Júlio Caineta}
+\title{CEGI 2014/2015 - Exame 1ª Época - Versão A}
+\usepackage{lastpage}
+\usepackage{minted}
+\usepackage{gensymb}
+\usepackage{wrapfig}
+\usepackage{tabulary}
+\usepackage{graphicx}
+\usepackage{xfrac}
+\usepackage{multirow}
+\usepackage[phantomtext]{dashundergaps}
+%\usepackage{color}
+\cfoot{Página \thepage\ de \pageref{LastPage}}
+\renewcommand{\solutiontitle}{\noindent\textbf{Solução:}\par\noindent}
+\pointpoints{valor}{valores}
+\pointsinrightmargin
+\bracketedpoints
+\marginpointname{ val.}
+\renewcommand*\half{.5}
+\hqword{Pergunta}
+\hpgword{Página}
+\hpword{Cotação}
+\hsword{Cotação obtida}
+\htword{Total}
+\newminted{r}{autogobble}
+\newmintinline{r}{}
+ 
+\printanswers
+%\shadedsolutions
+
+%\titlegraphic{}
+
+\begin{document}
+	
+\noindent\begin{minipage}{0.2\textwidth}% adapt widths of minipages to your needs
+	\includegraphics[width=2cm]{logo.png}
+\end{minipage}
+\hfill
+\begin{minipage}{0.8\textwidth}
+	\begin{center}
+		\textsc {\small NOVA IMS -- Universidade Nova de Lisboa} \\
+		\textsc {Computação em Estatística e Gestão de Informação -- 2º Semestre 2014/15}
+	\end{center}
+\end{minipage}
+
+
+\begin{center}
+%	\vspace{5mm} \\
+	{\large Exame 1ª Época -- Versão A -- 11/04/2015}
+\end{center}
+ 
+\vspace{5mm}
+\makebox[\textwidth]{Número: \underline{\phantom{XXXXXXXX}} Nome:\enspace\hrulefill}
+\vspace{5mm}
+
+{{\large\textbf{Leia, por favor, com atenção:}}
+\begin{enumerate}
+	\item Este exame deverá ser realizado com acesso a um computador com o programa R instalado. Só poderá aceder ao programa R e ao sistema de ajuda do mesmo.
+	\item É proibido o uso de qualquer material de apoio (livros, apontamentos, telemóvel), assim como a troca de qualquer informação com os colegas.
+	\item A entrega do exame e a saída da sala só é possível no final do exame .
+	\item Deverá escrever o seu nome, número e curso no cabeçalho desta folha
+	\item As respostas às questões deverão ser dadas, exclusivamente, na folha do enunciado, no espaço reservado para tal. Estas respostas deverão ser apenas código em \textbf{R}.
+	\item O não cumprimento de alguma das regras conduzirá à anulação do exame.
+	\item A duração do exame é de 75 minutos.
+\end{enumerate}
+
+\vspace{10mm}
+
+\begin{questions}
+	\question O vector \rinline{islands} contém as áreas, em milhares de milhas quadradas (1000 mi$^2$), das maiores massas de terra (continente e ilhas). Os sete valores mais altos, referem-se a continentes.
+	
+	\begin{parts}
+		\part[1] Descubra qual é a maior ilha do planeta e a respectiva área.~%\makeemptybox{1in}
+		
+			\begin{solution}
+				\begin{rcode}
+					> sort(islands, decreasing=TRUE)[7 + 1]
+					Greenland 
+					840 
+				\end{rcode}
+			\end{solution}
+			
+		\part[1] Sabendo que 1 mi = 1.609344 km, defina uma função que recebe um vector com valores de áreas em 1000 mi$^2$, e devolve um vector com valores de área em km$^2$. Converta os valores do vector  \rinline{islands} para km$^2$.~%\makeemptybox{1in}
+		
+		\begin{solution}
+			\begin{rcode}
+				mi2km = function(areas) {
+				  areas * (1.609344 ^ 2) * 1000
+				}
+				mi2km(islands)
+			\end{rcode}
+		\end{solution}
+		
+		\part[2] Utilize a função \rinline{substr} para modificar os nomes dos elementos do vector \rinline{islands}, mantendo apenas os primeiros três caracteres de cada nome.~%\makeemptybox{1in}
+		
+		\begin{solution}
+			\begin{rcode}
+				names(islands) = substr(names(islands),1,3)
+			\end{rcode}
+		\end{solution}
+			
+	\end{parts}
+	
+	\question[3] O \rinline{data.frame rock}  contém valores de quatro propriedades de amostras de rocha. Encontre as amostras em que os valores de três das suas propriedades são superiores aos valores do respectivo 3º quartil.~%\makeemptybox{1in}
+	
+	\begin{solution}
+		\begin{rcode}
+			qs = apply(rock, 2, quantile, .75)
+			> rock[apply(rock, 1, function(x) sum(x > qs) == 3),]
+			area    peri    shape  perm
+			18 10743 4787.62 0.262727  58.6
+			22 11876 4353.14 0.291029 142.0
+		\end{rcode}
+	\end{solution}
+	
+	\question A variável \rinline{mtcars} disponibiliza dados de várias propriedades de diferentes modelos de automóvel.
+	
+	\begin{parts}
+		\part[2] Calcule a média da potência (\rinline{hp}) dos conjuntos de veículos que têm o mesmo número de mudanças (\rinline{gear}). Não utilize uma estrutura iterativa.~%\makeemptybox{1in}
+		
+			\begin{solution}
+				\begin{rcode}
+					> by(mtcars$hp, mtcars$gear, mean)
+					mtcars$gear: 3
+					[1] 176.1333
+					------------------------------------------------------------ 
+					mtcars$gear: 4
+					[1] 89.5
+					------------------------------------------------------------ 
+					mtcars$gear: 5
+					[1] 195.6
+				\end{rcode}
+			\end{solution}
+			
+		\part[1] Visualize um gráfico que represente a relação entre a potência (\rinline{hp}) e o consumo de combustível (\rinline{mpg}). Que conclusão pode tirar ao visualizar esse gráfico?~%\makeemptybox{1in}
+		
+		\begin{solution}
+			\begin{rcode}
+				> plot(mtcars$hp, mtcars$mpg)
+			\end{rcode}
+			O gráfico mostra que maior potência leva a um menor consumo.
+		\end{solution}
+			
+%			\part[2] Nesse \rinline{data.frame}, o consumo é dado em milhas por galão (US). Na Europa, a unidade mais comum para o consumo de combustível é L/100 km. A \autoref{mpgl} mostra uma relação aproximada entre estas duas unidades.
+%			
+%			\begin{align}
+%			\label{mpgl}
+%			235 / \text{mpg}_{\text{US}} = \text{L}/100 \text{km}
+%			\end{align}
+%			
+%			Sem recorrer a um ciclo, adicione uma nova coluna à variável \rinline{mtcars} contendo o valor do consumo em L/100.
+%			
+%			\begin{solution}
+%				\begin{rcode}
+%					> mtcars2 = transform(mtcars, Consumo= 235/mpg)
+%				\end{rcode}
+%			\end{solution}
+			
+			\part[1] Guarde, num vector, os nomes dos modelos que têm a potência abaixo da média e um peso (\rinline{wt}) acima da média.~%\makeemptybox{1in}
+			
+			\begin{solution}
+			\begin{rcode}
+			> (lentos = rownames(subset(mtcars, wt > mean(wt) & hp < mean(hp))))
+			[1] "Valiant"   "Merc 280"  "Merc 280C"
+			\end{rcode}
+			\end{solution}
+			
+			%\pagebreak
+
+			\part[1] Ordene os registos na tabela, colocando primeiro os automóveis mais rápidos. A propriedade \rinline{qsec} contém o tempo necessário para percorrer $\sfrac{1}{4}$ de milha.~%\makeemptybox{1in}
+			
+			\begin{solution}
+				\begin{rcode}
+					 mtcars[order(mtcars$qsec), ]
+				\end{rcode}
+			\end{solution}
+			
+			\part[1] Guarde a tabela modificada num ficheiro que cumpra as seguintes especificações:
+				\begin{itemize}
+					\item Valores separados por tabulação;
+					\item Vírgula como separador decimal;
+					\item Preservar os nomes das colunas e das linhas.
+				\end{itemize}~%\makeemptybox{1in}
+				
+			\begin{solution}
+				\begin{rcode}
+					write.table(mtcars2, "/Users/aluno/CEGI/mtcars.tsv", sep="\t", dec=",")
+				\end{rcode}
+			\end{solution}
+					
+	\end{parts}
+	
+	\question A distribuição do número de alunos conforme a cor do cabelo, cor dos olhos, e género, está disponível na tabela \rinline{HairEyeColor}.
+	
+	\begin{parts}
+		\part[1] Faça a contagem do número de alunos masculinos e femininos.~%\makeemptybox{1in}
+		
+		\begin{solution}
+			\begin{rcode}
+				> margin.table(HairEyeColor,3)
+				Sex
+				Male Female 
+				279    313 
+			\end{rcode}
+		\end{solution}
+		
+		\part[2] Construa uma tabela que permita identificar qual é o par de características (cor dos olhos e cor dos cabelos) mais exclusivo nos alunos do sexo masculino, e qual o par de características mais exclusivo nos alunos do sexo feminino.~%\makeemptybox{1in}
+		
+		\begin{solution}
+			\begin{rcode}
+				> (h[,,1] - h[,,2])/(h[,,1] + h[,,2])
+				Eye
+				Hair          Brown       Blue       Hazel      Green
+				Black -0.05882353  0.1000000  0.33333333 0.20000000
+				Brown -0.10924370  0.1904762 -0.07407407 0.03448276
+				Red   -0.23076923  0.1764706  0.00000000 0.00000000
+				Blond -0.14285714 -0.3617021  0.00000000 0.00000000
+			\end{rcode}
+		\end{solution}
+		
+		%\pagebreak
+		
+		\part[2] Defina a função \rinline{prob}, que respeita o seguinte resultado.
+			\begin{rcode}
+				> args(prob)
+				function (cabelos, olhos, sexo) 
+				NULL
+			\end{rcode}
+		Esta função, quando chamada, devolve a probabilidade de um aluno, escolhido aleatoriamente do conjunto de dados em questão, ter o cabelo da cor \rinline{cabelos}, a cor dos olhos \rinline{olhos}, e ser do sexo \rinline{sexo}.~%\makeemptybox{1in}
+		
+		\begin{solution}
+			\begin{rcode}
+				prob = function(cabelos, olhos, sexo) {
+				  HairEyeColor[cabelos, olhos, sexo] / sum(HairEyeColor)
+				}
+			\end{rcode}
+		\end{solution}
+		
+	\end{parts}
+	
+	\question[2] Resolva o seguinte sistema de equações.
+	
+	\begin{align*}
+	\left\{\begin{matrix}
+	-12.7x & + & 4.2y & = & 1 \\
+	3x & - & 10.2y & - & 0.6z & = & 2 \\
+	22y & + & z & = & 3
+	\end{matrix}\right.
+	\end{align*}~%\makeemptybox{1in}
+	
+	\begin{solution}
+		\begin{rcode}
+			> coefs = matrix(c(-12.7, 4.2, 0, 3, -10.2, -0.6, 0, 22, 1),
+			+ nrow=3, ncol=3, byrow=TRUE)
+			> ys = c(1, 2, 3)
+			> solve(coefs, ys)
+			[1]   0.2556213   1.0110454 -19.2429980
+		\end{rcode}
+	\end{solution}
+	
+%	\question[3] Considere agora o conjunto de dados \rinline{iris}, contendo informação sobre 150 amostras de flores, acerca de 4 propriedades e a respectiva espécie.
+%	
+%	Pretende adicionar uma nova amostra ao conjunto existente. A \autoref{amostra} contém os valores das propriedades dessa amostra. Usando a técnica de classificação do vizinho mais próximo, descubra qual é a sua espécie.
+%		
+%	\begin{table}[h]
+%		\centering
+%		\begin{tabulary}{0.9\textwidth}{|C|C|C|C|C|}
+%			\hline Número do examplar & Comprimento da Sépala & Largura da Sépala & Comprimento da Pétala & Largura da Pétala \\ 
+%			\hline Nova amostra & 6,6 & 3,0 & 3,4 & 2,2 \\  
+%			\hline
+%		\end{tabulary}
+%		\caption{Características da nova amostra de flor Iris.}
+%		\label{amostra}
+%	\end{table}
+%		
+%	Assuma que cada característica tem o mesmo peso. Utilize a distância de Mahalanobis, já implementada na função \rinline{mahalanobis}, para encontrar o vizinho mais próximo.
+%	
+%	\begin{solution}
+%		\begin{rcode}
+%			> am = c(6.6, 3, 3.4, 2.2)
+%			> iris$Species[which.min(mahalanobis(iris[,-5], am, cov(iris[,-5])))]
+%			[1] setosa
+%		\end{rcode}
+%	\end{solution}
+	
+\end{questions}
+
+\vspace{5mm}
+%\centerline
+	\begin{center}
+		\gradetable[h][questions]
+	\end{center}
+	
+\end{document}

@@ -1,0 +1,252 @@
+% !TeX spellcheck = pt_PT
+%% ************************************************
+%% Universidade Nova de Lisboa
+%% NOVA Information Management School
+%% Computação em Estatística e Gestão de Informação
+%% Júlio Caineta, 2016
+%% **********************************************
+\documentclass{exam}
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage[hidelinks,pdfusetitle]{hyperref}
+\author{Júlio Caineta}
+\title{CEGI 2015/2016 - Exercícios 3}
+\usepackage{lastpage}
+\usepackage{minted}
+\usepackage{paralist}
+\usepackage{upquote}
+\usepackage{amsmath}
+%\usepackage{color}
+\cfoot{Página \thepage\ de \pageref{LastPage}}
+\renewcommand{\solutiontitle}{\noindent\textbf{Solução:}\par\noindent}
+\newminted{r}{autogobble}
+\newmintinline{r}{}
+ 
+\printanswers
+%\shadedsolutions
+
+\begin{document}
+ 
+\begin{center}
+\textsc {\small NOVA IMS -- Universidade Nova de Lisboa} \\
+\textsc {Computação em Estatística e Gestão de Informação -- 2º Semestre 2015/16}
+\vspace{5mm} \\
+{\large Exercícios 3}
+\end{center}
+ 
+\vspace{5mm}
+
+\section*{Funções}
+
+Em \textbf{R}, as funções são também objectos e podem ser manipuladas como tal. Têm três principais propriedades:
+
+\begin{description}
+	\item[argumentos] Conjunto dos parâmetros que a função vai receber, em que alguns podem ter um valor por defeito e ser opcionais. Uma forma rápida de consultar os argumentos de uma função é através da função \rinline{args}.
+	\item[corpo]  Ao conjunto de expressões avaliado na execução da função chama-se corpo da função. É possível visualizar o corpo de uma função através da função \rinline{body}.
+	\item[ambiente] Uma função é definida num determinado ambiente (\textit{environment}) activo, o que irá determinar os objectos visíveis e acessíveis pela função, também conhecido como alcance (\textit{scope}).
+\end{description}
+ 
+\begin{questions}
+\question  Considere o seguinte \rinline{data.frame} que contém uma pauta com as notas dos alunos de CEGI:
+
+\begin{rcode}
+	> dput(pauta)
+	structure(list(`Teste SAS` = c(14L, 14L, 13L, 15L), `Teste R` = c(13L,
+	19L, 10L, 12L), `Trabalho 1` = c(18L, 6L, 16L, 9L), `Trabalho 2` = c(11L,
+	14L, 12L, 9L)), .Names = c("Teste SAS", "Teste R", "Trabalho 1",
+	"Trabalho 2"), row.names = c("Rui", "Manuel", "Mariana", "Carolina"
+	), class = "data.frame")
+\end{rcode}
+
+A seguinte função, usa uma estrutura iterativa para encontrar o nome dos alunos que tiveram positiva ($\geq 10$) em todas as componentes.
+
+\begin{rcode}
+tudo_positivo = function (notas) {
+	aluno = 1
+	nomes = c()
+	while (aluno <= nrow(notas)) {
+		if (all(notas[aluno, ] >= 10)) {
+			nomes = c(nomes, rownames(notas)[aluno])
+		}
+		aluno = aluno + 1
+	}
+	return (nomes)
+}
+
+> tudo_positivo(pauta)
+[1] "Rui"     "Mariana"
+\end{rcode}
+
+O \textbf{R} é uma linguagem versátil e compatível com o paradigma de programação funcional, sendo possível resolver este exercício de uma forma mais curta e eficiente (além de elegante). Reescreva a função \rinline{tudo_positivo} sem usar uma estrutura iterativa.
+
+{\small \textbf{Nota:} A função \rinline{dput()} é útil para recriar objectos definidos em R. Neste exemplo, o \rinline{data.frame pauta} estava guardado numa sessão em R, e com esta função é possível guardar uma expressão que permite recriar o mesmo objecto. Assim, para ter esta pauta na sua sessão, basta copiar o resultado da chamada da função \rinline{dput()}}.
+
+\begin{solution}
+\begin{rcode}
+tudo_positivo = function(notas) {
+	rownames(notas)[apply(notas, 1, function(x) all(x >= 10))]
+}
+\end{rcode}
+\end{solution}
+
+\question A função \rinline{mais_faceis} mostra as componentes em que mais alunos (por defeito, pelo menos 3 alunos) tiveram positiva. Esta função utiliza a coerção de valores lógicos para valores numéricos.
+
+\begin{rcode}
+	mais_faceis = function(notas, lim=3) {
+		componentes = c()
+		for (componente in 1:ncol(notas)) {
+			if (sum(notas[, componente] >= 10) >= lim) {
+				componentes = c(componentes, (colnames(notas)[componente]))
+			}
+		}
+		return (componentes)
+	}
+	
+	> mais_faceis(pauta)
+	[1] "Teste SAS"  "Teste R"    "Trabalho 2"
+\end{rcode}
+
+Reescreva esta função usando o paradigma da programação funcional (sem estruturas iterativas).
+
+\begin{solution}
+	\begin{rcode}
+		mais_faceis = function(notas, lim=3) {
+			colnames(notas)[apply(notas, 2, function(x) sum(x >= 10) >= lim)]
+		}
+	\end{rcode}
+\end{solution}
+
+\question O vector \rinline{rivers} contém o comprimento, em milhas, dos 141 principais rios norte americanos.
+
+Escreva a função \rinline{perc}, que recebe dois argumentos: um vector numérico, \rinline{v} e um número, \rinline{x}. A função devolve o percentil de \rinline{v} correspondente ao valor \rinline{x}.
+
+Por exemplo, considerando o vector \rinline{rivers}:
+
+\begin{rcode}
+	> perc(rivers, 680)
+	[1] 75.1773
+	> perc(rivers, 425)
+	[1] 50.35461
+	> perc(rivers, 10)
+	[1] 0
+	> perc(rivers, 10000)
+	[1] 100
+\end{rcode}
+
+Estes valores correspondem aos obtidos com a função \rinline{quantile}.
+
+\begin{rcode}
+	> quantile(rivers)
+	0%    25%    50%    75%    100% 
+	135   310    425    680    3710 
+\end{rcode}
+
+{\footnotesize \textit{Adaptado do Exame de Época Especial de 2014/2015.}}
+
+\begin{solution}
+	\begin{rcode}
+		perc = function (v, x) {
+			return (length(subset(v, v <= x)) / length(v) * 100)
+		}
+	\end{rcode}
+\end{solution}
+
+\question Atente ao seguinte bloco de código:
+\begin{rcode}
+	x = 2
+	z = 56.3
+	f = function(x) {
+		a = 34
+		y = x / 4 * a * z
+		y
+	}
+	f(21)
+	a
+\end{rcode}
+Qual o valor das variáveis \rinline{a}, \rinline{x} e \rinline{z} dentro do ambiente da função? O que aconteceu ao valor da variável \rinline{a} após a execução da função?
+
+\begin{solution}
+	\begin{rcode}
+		f = function(x) {
+			a = 34
+			y = x / 4 * a * z
+			cat("Variável x: ", x, "\nVariável a: ", a, "\nVariável z: ", z, "\n")
+			y
+		}
+		
+		> x = 2
+		> z = 56.3
+		> f(21)
+		Variável x:  21 
+		Variável a:  34 
+		Variável z:  56.3 
+		[1] 10049.55
+	\end{rcode}
+	Os valores visualizados correspondem aos valores que aquelas variáveis têm \textbf{dentro} da função:
+	\begin{itemize}
+		\item A variável \rinline{x} toma o valor passado como argumento da função. Não é o mesmo objecto que existe fora da função, embora tenha o mesmo nome (existem em ambientes diferentes).
+		\item A variável \rinline{a} só existe dentro da função e tem o valor que recebe dentro desta.
+		\item A variável \rinline{z} existe fora da função, mas quando acedida dentro da função, como não existe nenhum outro objecto com o mesmo nome, é procurado um objecto com esse nome no ambiente imediatamente acima do ambiente da função \rinline{f}.
+	\end{itemize}
+\end{solution}
+
+\question Defina uma função para calcular o factorial (\autoref{eq:fact}) de um dado número natural.
+
+\begin{equation}
+\text{fact}(n) =
+	\begin{cases}
+		1 & \text{se } n = 0 \\
+		n \times \text{fact}(n - 1) & \text{se } n > 0
+	\end{cases}
+	\label{eq:fact}
+\end{equation}
+
+\vspace{5mm}
+\begin{quote}
+	Recursion in computer science is a method where the solution to a problem depends on solutions to smaller instances of the same problem (as opposed to iteration).
+\end{quote}
+\vspace{5mm}
+\rightline{{\rm --- Graham et al., 1990}}
+
+Agora defina a mesma função mas utilizando uma definição recursiva.
+
+\begin{solution}
+	\begin{rcode}
+		# definição iterativa
+		factIter = function(n) {
+			f = 1
+			for (i in 2:n) f = f * i
+			f
+		}
+		# definição recursiva
+		fact = function(n) {
+			if (n <= 1) 1
+			else n * fact(n - 1)
+		}
+	\end{rcode}
+\end{solution}
+
+\question Dado um vector \rinline{x} com números inteiros, construa um novo vector com a soma dos números iguais que existem em \rinline{x}.
+
+Por exemplo, no seguinte vector 
+
+\begin{rcode}
+	x = (1, 2, 5, 4, 3, 1, 1, 4, 2, 6, 7, 2, 4, 1, 5)
+\end{rcode}
+
+a soma dos números 1 dá 4 (há quatro 1), a soma dos números 2 dá 6 (há três 2), a soma dos números 3 dá 3 (há um 3), etc., tal que o resultado esperado é o seguinte:
+
+\begin{rcode}
+	[1]  4  6  3 12 10  6  7
+\end{rcode}
+
+\begin{solution}
+	\begin{rcode}
+		> sapply(sort(unique(x)), function(i) sum(x[x == i]))
+		[1]  4  6  3 12 10  6  7
+	\end{rcode}
+	\end{solution}
+
+\end{questions}
+
+\end{document}

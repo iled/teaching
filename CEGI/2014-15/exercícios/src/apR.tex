@@ -1,0 +1,121 @@
+%% ************************************************
+%% Universidade Nova de Lisboa
+%% NOVA Information Management School
+%% Computação em Estatística e Gestão de Informação
+%% Júlio Caineta, 2015
+%% ************************************************
+\documentclass{exam}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage[portuguese]{babel}
+\usepackage[hidelinks,pdfusetitle]{hyperref}
+\author{Júlio Caineta}
+\title{CEGI 2014/2015 - Exercícios de preparação para o exame}
+\usepackage{lastpage}
+\usepackage{minted}
+\usepackage{gensymb}
+\usepackage{wrapfig}
+\usepackage{tabulary}
+\usepackage{graphicx}
+%\usepackage{color}
+\cfoot{Página \thepage\ de \pageref{LastPage}}
+\renewcommand{\solutiontitle}{\noindent\textbf{Solução:}\par\noindent}
+\newminted{r}{autogobble}
+\newmintinline{r}{}
+ 
+%\printanswers
+%\shadedsolutions
+
+\begin{document}
+ 
+\begin{center}
+\textsc {\small NOVA IMS -- Universidade Nova de Lisboa} \\
+\textsc {Computação em Estatística e Gestão de Informação -- 2º Semestre 2014/15}
+\vspace{5mm} \\
+{\large Exercícios de preparação para o exame}
+\end{center}
+ 
+\vspace{5mm}
+
+Para resolver os seguintes exercícios, pode usar um ficheiro de dados de uma das fichas de exercícios das aulas práticas, um ficheiro com dados proveniente de uma qualquer outra fonte, ou ainda, usar uma tabela já existente em \textbf{R} (e.g., \rinline{iris}).
+
+\section*{Manipulação de ficheiros}
+
+\begin{questions}
+	\question Carregar um ficheiro de texto com dados, organizados em várias colunas. Identificar a parametrização necessária para carregar o ficheiro.
+
+	\question Guardar o conteúdo de um \rinline{data.frame} num ficheiro de texto, de acordo com determinadas especificações (por exemplo, com valores separados por vírgulas).
+
+\end{questions}
+
+\section*{Aritmética}
+
+\begin{questions}
+	\question Calcular a média ponderada das colunas, de acordo com uma dada ponderação.
+	
+	\question Subtrair a cada linha a respectiva média.
+\end{questions}
+
+\section*{Lógica}
+
+\begin{questions}
+	\question Seleccionar as linhas em que o valor da última coluna está entre o 2º e o 3º quartil, dessa mesma variável.
+	
+	\question Assinalar as linhas em que existem pelo menos 3 valores abaixo da média da variável, colocando \rinline{"OK"} ou \rinline{"Fail"} numa nova coluna.
+	
+	\question Remover 10\% das linhas com variância mais alta.
+\end{questions}
+
+\section*{Factores}
+
+\begin{questions}
+	\question Carregar um novo ficheiro, com duas colunas, em que uma existe em comum com o primeiro ficheiro. A nova coluna tem valores do tipo \rinline{factor}, correspondendo a um ID único.
+	
+	\question Juntar essa nova tabela à anterior, confirmando que existe pelo menos uma coluna em comum entre as duas tabelas.
+	
+	\question Quantos registos há em cada um dos grupos?
+	
+	\question Fazer o somatório de cada uma das variáveis, para cada ID.
+	
+	\question Encontrar o ID com menor variância.
+	
+	\question Somar 10\% do valor de cada variável, às linhas do ID com média mais baixa.
+
+\end{questions}
+
+\section*{Sequências}
+
+\begin{questions}
+	\question Seleccionar linhas, começando na 2ª linha, acabando na 42ª a contar do fim, de 7 em 7 linhas.
+	
+	\question Quais são os ID's existentes entre os elementos seleccionados anteriormente?
+	
+%	\question Escolher 10 linhas aleatoriamente, segundo uma distribuição normal padrão.
+	
+	\question Criar uma amostra com 20 elementos, retirados aleatoriamente, com igual probabilidade, mas com reposição.
+	
+\end{questions}
+
+\section*{Funções}
+\begin{questions}
+	\question Definir uma função que receba dois vectores e calcule o RMSE (\autoref{rmse}) entre eles. Assuma que um vector contém valores estimados de uma variável ($\hat{\theta}$), e que o outro tem valores observados da mesma variável ($\theta$).
+	
+	\begin{equation}
+		\label{rmse}
+		\operatorname{RMSE}(\hat{\theta}) = \sqrt{\operatorname{MSE}
+			(\hat{\theta})} = \sqrt{\operatorname{E}((\hat{\theta}-\theta)^2)}.
+	\end{equation}
+	
+	\question Aplicar essa função em cada linha, em que o 2º vector é a média de todas as linhas. Guarde os valores calculados numa nova coluna.
+
+\end{questions}
+
+\section*{Manipulação de dados}
+
+\begin{questions}
+	\question Removendo os registos duplicados, com quantos registos fica a tabela?
+	
+	\question Modificar a coluna com os valores de RMSE, colocando cada valor elevado ao quadrado.
+\end{questions}
+
+\end{document}

@@ -1,0 +1,429 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage[top=1in, bottom=1.25in, left=1.25in, right=1.25in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage[hidelinks,pdfusetitle]{hyperref}
+\author{Júlio Caineta}
+\title{CEGI 2014/2015 - Exemplos de gráficos em R}
+\newcounter{graph}[section]
+\renewcommand{\thegraph}{\number\numexpr\value{graph}+1\relax.~\stepcounter{graph}}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\begin{center}
+\textsc {\small NOVA IMS -- Universidade Nova de Lisboa} \\
+\textsc {Computação em Estatística e Gestão de Informação -- 2º Semestre 2014/15}
+\vspace{5mm} \\
+{\large Exemplos de gráficos em \textbf{R}}
+\end{center}
+
+\vspace{5mm}
+
+Este documento apresenta alguns exemplos de como criar e manipular gráficos em \textbf{R}.
+
+
+\section{Univariados}
+
+\thegraph Histograma de uma variável.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{hist}\hlstd{(iris}\hlopt{$}\hlstd{Petal.Width)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-1-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph Histograma com título, legendas nos eixos, e densidade de probabilidade em vez de frequências.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{hist}\hlstd{(iris}\hlopt{$}\hlstd{Petal.Width,} \hlkwc{main} \hlstd{=} \hlstr{"Histograma da Largura da Pétala"}\hlstd{,}
+     \hlkwc{xlab} \hlstd{=} \hlstr{"Largura (cm)"}\hlstd{,} \hlkwc{ylab} \hlstd{=} \hlstr{"Probabilidade"}\hlstd{,} \hlkwc{prob} \hlstd{= T)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-2-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph Boxplot de uma variável, com título
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{boxplot}\hlstd{(iris}\hlopt{$}\hlstd{Petal.Length,} \hlkwc{main} \hlstd{=} \hlstr{"Largura da Pétala"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-3-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph Gráfico de barras com a contagem do número de amostras em cada espécie, cuja pétala tem uma largura superior a 1.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{barplot}\hlstd{(}\hlkwd{table}\hlstd{(}\hlkwd{subset}\hlstd{(iris, Petal.Width} \hlopt{>} \hlnum{1}\hlstd{)}\hlopt{$}\hlstd{Species))}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph Boxplots condicionados, mostrando um para cada espécie.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{boxplot}\hlstd{(Petal.Width} \hlopt{~} \hlstd{Species, iris)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-5-1} 
+
+\end{knitrout}
+
+\pagebreak
+\section{Três variáveis}
+As seguintes funções usam formas diferentes de representar a terceira variável.
+\begin{itemize}
+\item persp() para produzir superfícies tridimensionais.
+\item countour() para produzir gráficos com curvas de nível.
+\item image() usando cores para representar a 3ª dimensão.
+\end{itemize}
+
+\thegraph Função matemática, com três variáveis, representada em perspectiva.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{x} \hlkwb{=} \hlkwd{seq}\hlstd{(}\hlopt{-}\hlnum{10}\hlstd{,} \hlnum{10}\hlstd{,} \hlkwc{length} \hlstd{=} \hlnum{30}\hlstd{)}
+\hlstd{y} \hlkwb{=} \hlstd{x}
+\hlstd{f} \hlkwb{=} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{y}\hlstd{) \{}
+      \hlstd{r} \hlkwb{=} \hlkwd{sqrt}\hlstd{(x}\hlopt{^}\hlnum{2} \hlopt{+} \hlstd{y}\hlopt{^}\hlnum{2}\hlstd{)}
+      \hlnum{10} \hlopt{*} \hlkwd{sin}\hlstd{(r)}\hlopt{/}\hlstd{r}
+    \hlstd{\}}
+
+\hlstd{z} \hlkwb{=} \hlkwd{outer}\hlstd{(x, y, f)}
+\hlstd{z[}\hlkwd{is.na}\hlstd{(z)]} \hlkwb{=} \hlnum{1}
+\hlkwd{persp}\hlstd{(x, y, z,} \hlkwc{theta} \hlstd{=} \hlnum{30}\hlstd{,} \hlkwc{phi} \hlstd{=} \hlnum{30}\hlstd{,} \hlkwc{expand} \hlstd{=} \hlnum{0.5}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{"lightblue"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-6-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph Carta altimétrica de um vulcão, com a altitude representada por curvas de nível.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{x} \hlkwb{=} \hlnum{10} \hlopt{*} \hlnum{1}\hlopt{:}\hlkwd{nrow}\hlstd{(volcano)}
+\hlstd{y} \hlkwb{=} \hlnum{10} \hlopt{*} \hlnum{1}\hlopt{:}\hlkwd{ncol}\hlstd{(volcano)}
+\hlkwd{contour}\hlstd{(x, y, volcano,} \hlkwc{col} \hlstd{=} \hlstr{"red"}\hlstd{,} \hlkwc{lty} \hlstd{=} \hlstr{"solid"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-7-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph Agora com a altitude representada em função da cor (valores mais baixos a vermelho).
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{image}\hlstd{(volcano)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-8-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph Sobreposição das duas técnicas anteriores.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{x} \hlkwb{=} \hlnum{10} \hlopt{*} \hlstd{(}\hlnum{1}\hlopt{:}\hlkwd{nrow}\hlstd{(volcano))}
+\hlstd{y} \hlkwb{=} \hlnum{10} \hlopt{*} \hlstd{(}\hlnum{1}\hlopt{:}\hlkwd{ncol}\hlstd{(volcano))}
+\hlkwd{image}\hlstd{(x, y, volcano,} \hlkwc{col} \hlstd{=} \hlkwd{terrain.colors}\hlstd{(}\hlnum{100}\hlstd{))}
+\hlkwd{contour}\hlstd{(x, y, volcano,} \hlkwc{levels} \hlstd{=} \hlkwd{seq}\hlstd{(}\hlnum{90}\hlstd{,} \hlnum{200}\hlstd{,} \hlkwc{by} \hlstd{=} \hlnum{5}\hlstd{),} \hlkwc{add} \hlstd{=} \hlnum{TRUE}\hlstd{,}
+        \hlkwc{col} \hlstd{=} \hlstr{"peru"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-9-1} 
+
+\end{knitrout}
+\pagebreak
+\section{Multivariados (suporte para mais de três variáveis)}
+
+\thegraph Cinco variáveis representadas por números e cores.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{m} \hlkwb{=} \hlkwd{matrix}\hlstd{(}\hlkwd{rnorm}\hlstd{(}\hlnum{100}\hlstd{),} \hlnum{20}\hlstd{,} \hlnum{5}\hlstd{)}
+\hlstd{op} \hlkwb{=} \hlkwd{par}\hlstd{(}\hlkwc{mfrow} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{2}\hlstd{),} \hlkwc{mar} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,} \hlnum{3}\hlstd{,} \hlnum{0}\hlstd{,} \hlnum{1}\hlstd{))}
+\hlkwd{matplot}\hlstd{(m)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-10-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph Igual, mas com uma representação por linhas.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{matplot}\hlstd{(m,} \hlkwc{type} \hlstd{=} \hlstr{"l"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-11-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph Gráfico de "estrelas" (\textit{star/spider/radar plot}), com legenda à esquerda,
+reflectindo os valores de várias propriedades de automóveis.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{stars}\hlstd{(mtcars[}\hlnum{1}\hlopt{:}\hlnum{10}\hlstd{,} \hlnum{1}\hlopt{:}\hlnum{7}\hlstd{],} \hlkwc{main} \hlstd{=} \hlstr{"Motor Trend Cars"}\hlstd{,} \hlkwc{key.loc}\hlstd{=}\hlkwd{c}\hlstd{(}\hlopt{-}\hlnum{1.5}\hlstd{,} \hlnum{8}\hlstd{))}
+\end{alltt}
+\end{kframe}
+
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-12-1} 
+
+}
+
+
+
+\end{knitrout}
+\pagebreak
+\thegraph Gráfico em mosaico, mostrando a contagem dos sobreviventes do acidente com
+o navio Titanic, discriminada por classe, faixa etária e género.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{mosaicplot}\hlstd{(Titanic,} \hlkwc{main} \hlstd{=} \hlstr{"Sobreviventes do Titanic"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-13-1} 
+
+\end{knitrout}
+\pagebreak
+\section{Adicionar elementos a gráficos existentes}
+
+\thegraph Adicionar pontos a um gráfico de pontos.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{plot}\hlstd{(}\hlkwd{rnorm}\hlstd{(}\hlnum{10}\hlstd{))}
+\hlkwd{points}\hlstd{(}\hlkwd{rnorm}\hlstd{(}\hlnum{10}\hlstd{),} \hlkwc{col} \hlstd{=} \hlstr{"red"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-14-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph Adicionar linhas.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{lines}\hlstd{(}\hlkwd{rnorm}\hlstd{(}\hlnum{10}\hlstd{),} \hlkwc{col} \hlstd{=} \hlstr{"red"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-15-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph Adicionar uma curva com a estimativa da densidade da distribuição representada.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{hist}\hlstd{(iris}\hlopt{$}\hlstd{Petal.Width,} \hlkwc{main} \hlstd{=} \hlstr{"Histograma da Largura da Pétala"}\hlstd{,} \hlkwc{xlab} \hlstd{=} \hlstr{""}\hlstd{,}
+     \hlkwc{ylab} \hlstd{=} \hlstr{"Probabilidade"}\hlstd{,} \hlkwc{prob} \hlstd{= T)}
+\hlkwd{lines}\hlstd{(}\hlkwd{density}\hlstd{(iris}\hlopt{$}\hlstd{Petal.Width))}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-16-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph Desenhar uma linha horizontal, representando a média dos pontos no gráfico.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{x} \hlkwb{=} \hlkwd{rnorm}\hlstd{(}\hlnum{10}\hlstd{)}
+\hlkwd{plot}\hlstd{(x)}
+\hlkwd{abline}\hlstd{(}\hlkwc{h} \hlstd{=} \hlkwd{mean}\hlstd{(x),} \hlkwc{col} \hlstd{=} \hlstr{"green"}\hlstd{,} \hlkwc{lty} \hlstd{=} \hlnum{2}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-17-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph Agora uma linha vertical.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{abline}\hlstd{(}\hlkwc{v} \hlstd{=} \hlnum{3}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{"blue"}\hlstd{,} \hlkwc{lty} \hlstd{=} \hlnum{4}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-18-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph A mesma função também suporta serve para representar linhas diagonais.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{abline}\hlstd{(}\hlopt{-}\hlnum{0.3}\hlstd{,} \hlnum{0.5}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{"red"}\hlstd{,} \hlkwc{lty} \hlstd{=} \hlnum{3}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-19-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph Adicionar texto em cima dos pontos do gráfico, de acordo com o respectivo valor.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{y} \hlkwb{=} \hlkwd{rnorm}\hlstd{(}\hlnum{10}\hlstd{)}
+\hlkwd{plot}\hlstd{(y)}
+\hlkwd{text}\hlstd{(}\hlnum{1}\hlopt{:}\hlnum{10}\hlstd{, y,} \hlkwd{ifelse}\hlstd{(y} \hlopt{>} \hlnum{0}\hlstd{,} \hlstr{"pos"}\hlstd{,} \hlstr{"neg"}\hlstd{))}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-20-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph Colocar texto nas margens do gráfico.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{plot}\hlstd{(y)}
+\hlkwd{mtext}\hlstd{(}\hlstr{"margem de baixo"}\hlstd{,} \hlkwc{side} \hlstd{=} \hlnum{1}\hlstd{)}
+\hlkwd{mtext}\hlstd{(}\hlstr{"margem de baixo (na 2ª linha)"}\hlstd{,} \hlkwc{side} \hlstd{=} \hlnum{1}\hlstd{,} \hlkwc{line} \hlstd{=} \hlnum{1}\hlstd{)}
+\hlkwd{mtext}\hlstd{(}\hlstr{"margem esquerda"}\hlstd{,} \hlkwc{side} \hlstd{=} \hlnum{2}\hlstd{)}
+\hlkwd{mtext}\hlstd{(}\hlstr{"margem direita"}\hlstd{,} \hlkwc{side} \hlstd{=} \hlnum{4}\hlstd{)}
+\hlkwd{mtext}\hlstd{(}\hlstr{"margem de cima"}\hlstd{,} \hlkwc{side}\hlstd{=}\hlnum{3}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-21-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph Adicionar uma seta, seguida de texto, a um gráfico de linhas.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{plot}\hlstd{(}\hlnum{1}\hlopt{:}\hlnum{6}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{10}\hlstd{,} \hlnum{20}\hlstd{,} \hlnum{23}\hlstd{,} \hlnum{16}\hlstd{,} \hlnum{18}\hlstd{,} \hlnum{25}\hlstd{),} \hlkwc{type} \hlstd{=} \hlstr{"l"}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{"green"}\hlstd{)}
+\hlkwd{arrows}\hlstd{(}\hlnum{2}\hlstd{,} \hlnum{12}\hlstd{,} \hlnum{4}\hlstd{,} \hlnum{15.7}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{"red"}\hlstd{)}
+\hlkwd{text}\hlstd{(}\hlnum{2}\hlstd{,} \hlnum{12}\hlstd{,} \hlstr{"descida estranha!"}\hlstd{,} \hlkwc{pos} \hlstd{=} \hlnum{1}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-22-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph Adicionar título e legendas a um gráfico com duas variáveis representadas em linhas.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{plot}\hlstd{(}\hlkwd{rnorm}\hlstd{(}\hlnum{10}\hlstd{),} \hlkwc{type} \hlstd{=} \hlstr{"l"}\hlstd{)}
+\hlkwd{lines}\hlstd{(}\hlkwd{rnorm}\hlstd{(}\hlnum{10}\hlstd{),} \hlkwc{col} \hlstd{=} \hlstr{"red"}\hlstd{,} \hlkwc{lty} \hlstd{=} \hlnum{2}\hlstd{)}
+\hlkwd{title}\hlstd{(}\hlstr{"Números aleatórios"}\hlstd{)}
+\hlkwd{legend}\hlstd{(}\hlstr{"topright"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlstr{"1ª Série"}\hlstd{,} \hlstr{"2ª Série"}\hlstd{),} \hlkwc{lty} \hlstd{=} \hlnum{1}\hlopt{:}\hlnum{2}\hlstd{,} \hlkwc{col} \hlstd{=} \hlnum{1}\hlopt{:}\hlnum{2}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-23-1} 
+
+\end{knitrout}
+\pagebreak
+\section{Configurar a janela}
+
+\thegraph Dividir a janela em quatro partes iguais, colocando um gráfico de linhas em cada uma delas.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{par}\hlstd{(}\hlkwc{mfrow} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,} \hlnum{2}\hlstd{))}
+\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlnum{4}\hlstd{)} \hlkwd{plot}\hlstd{(}\hlkwd{rnorm}\hlstd{(}\hlnum{10}\hlstd{),} \hlkwc{col} \hlstd{= i,} \hlkwc{type} \hlstd{=} \hlstr{"l"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-24-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph Outra forma de dividir a janela em quatro partes iguais, mostrando, de seguida, uma pré-visualização da disposição criada.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{layout}\hlstd{(}\hlkwd{matrix}\hlstd{(}\hlnum{1}\hlopt{:}\hlnum{4}\hlstd{,} \hlnum{2}\hlstd{,} \hlnum{2}\hlstd{))}
+\hlkwd{layout.show}\hlstd{(}\hlnum{4}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-25-1} 
+
+\end{knitrout}
+\pagebreak
+\thegraph A função anterior também permite criar divisões com diferentes dimensões, por exemplo duas divisões, em que a primeira tem o dobro do tamanho da segunda.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{layout}\hlstd{(}\hlkwd{matrix}\hlstd{(}\hlnum{1}\hlopt{:}\hlnum{2}\hlstd{,} \hlnum{2}\hlstd{,} \hlnum{2}\hlstd{),} \hlkwc{heights} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,} \hlnum{1}\hlstd{))}
+\hlkwd{layout.show}\hlstd{(}\hlnum{2}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-26-1} 
+\begin{kframe}\begin{alltt}
+\hlkwd{plot}\hlstd{(}\hlkwd{rnorm}\hlstd{(}\hlnum{10}\hlstd{),} \hlkwc{type}\hlstd{=}\hlstr{"l"}\hlstd{,} \hlkwc{col}\hlstd{=}\hlstr{"gray"}\hlstd{)}
+\hlkwd{plot}\hlstd{(}\hlkwd{rnorm}\hlstd{(}\hlnum{10}\hlstd{),} \hlkwc{type}\hlstd{=}\hlstr{"l"}\hlstd{,} \hlkwc{col}\hlstd{=}\hlstr{"purple"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-26-2} 
+
+\end{knitrout}
+
+\end{document}

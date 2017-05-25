@@ -1,0 +1,266 @@
+% !TeX spellcheck = pt_PT
+%% ************************************************
+%% Universidade Nova de Lisboa
+%% NOVA Information Management School
+%% Computação em Estatística e Gestão de Informação
+%% Júlio Caineta, 2016
+%% **********************************************
+\documentclass{exam}
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage[hidelinks,pdfusetitle]{hyperref}
+\author{Júlio Caineta}
+\title{CEGI 2015/2016 - Exercícios 1}
+\usepackage{lastpage}
+\usepackage{minted}
+\usepackage{paralist}
+%\usepackage{color}
+\cfoot{Página \thepage\ de \pageref{LastPage}}
+\renewcommand{\solutiontitle}{\noindent\textbf{Solução:}\par\noindent}
+\newminted{r}{autogobble}
+\newmintinline{r}{}
+ 
+\printanswers
+%\shadedsolutions
+
+\begin{document}
+ 
+\begin{center}
+\textsc {\small NOVA IMS -- Universidade Nova de Lisboa} \\
+\textsc {Computação em Estatística e Gestão de Informação -- 2º Semestre 2015/16}
+\vspace{5mm} \\
+{\large Exercícios 1}
+\end{center}
+ 
+\vspace{5mm}
+
+\section{Expressões}
+Uma expressão em \textbf{R} corresponde a uma sequência de operações, e que pode incluir chamadas de variáveis e de funções, que poderá ser avaliada, tendo um (e apenas um) retorno.
+ 
+\begin{questions}
+\question  Avalie as seguintes expressões: \
+\begin{itemize}
+\item \rinline{43 * 3}
+\item \rinline{8 ** 4}
+\item \rinline{8 ^ 4}
+\item \rinline{28 - 2 * 5}
+\item \rinline{(28 - 2) * 5}
+\item \rinline{4 + 2 == 42}
+\item \rinline{5 - sum(1, 4)}
+\end{itemize}
+
+\begin{solution}
+	\begin{rcode}
+		> 43 * 3
+		[1] 129
+		# o expoente pode ser obtido com os operadores ** e ^ (acento circunflexo)
+		> 8 ** 4
+		[1] 4096
+		> 8 ^ 4
+		[1] 4096
+		# a precedência das operações aritméticas é respeitada
+		> 28 - 2 * 5
+		[1] 18
+		> (28 - 2) * 5
+		[1] 130
+		# exemplo com o operador lógico de igualdade
+		# os operadores lógicos têm menor precedência que os operadores aritméticos
+		> 4 + 2 == 42
+		[1] FALSE
+		# uma expressão pode envolver a chamada de uma função
+		> 5 - sum(1, 4)
+		[1] 0
+	\end{rcode}
+Notas:
+\begin{itemize}
+\item Para inserir um comentário no código, ou comentar uma instrução, basta colocar um cardinal \texttt{\#} antes do texto pretendido;
+\item O \textbf{R} respeita a precedência dos operadores aritméticos, bem como de outros operadores próprios, pelo que deve-se ter cuidado com a ordem das operações, e usar parêntesis caso seja necessário.
+\end{itemize}
+\end{solution}
+
+\question Avalie as seguintes expressões matemáticas em \textbf{R}:
+
+\begin{itemize}
+	\item ${-2}^4$
+	\item $12 + 5 \times \pi$
+	\item $3^{7-4}  + \sqrt{2}$
+	\item $\sqrt{(5-2)^2 + (7-3)^2}$
+	\item $\frac{20 + 18 + 24}{3}$
+	\item $\sqrt[3]{(20 \times 18 \times 24)}$
+	
+\end{itemize}
+
+\begin{solution}
+	\begin{rcode}
+		# neste caso obteria um resultado errado sem os parêntesis
+		> (-2)^4
+		[1] 16
+		> 12 + 5 * pi
+		[1] 27.70796
+		> 3 ^ (7 - 4)
+		[1] 27
+		# exemplo com a distância euclidiana entre dois pontos no espaço 2-D 
+		> sqrt((5 - 2) ^ 2 + (7 - 3) ^ 2)
+		[1] 5
+		# exemplo de média aritmética
+		> (20 + 18 + 24) / 3
+		[1] 20.66667
+		# exemplo de média geométrica
+		> (20 * 18 * 24) ^ (1/3)
+		[1] 20.51971
+	\end{rcode}
+	Notas:
+	\begin{itemize}
+		\item O valor da constante $\pi$ pode ser acedido pela variável pré-definida \rinline{pi}.
+		\item A raiz quadrada pode ser obtida pela função \rinline{sqrt()}.
+		\item Para se obter o valor de uma raiz que não a quadrada, pode-se usar a relação $\sqrt[n]{x} = x^{1/n}$.
+	\end{itemize}
+\end{solution}
+
+\question A \autoref{tab: valores} contém variáveis e expressões. Guarde as expressões da coluna \textbf{Expressão} nas variáveis correspondentes, indicadas na coluna \textbf{Variável}.
+
+\begin{table}[htp]
+	\caption{Variáveis e expressões.}
+	\label{tab: valores}
+	\begin{center}
+		\begin{tabular}{cc}
+%			\hline
+			Variável & Expressão \\ \hline
+			a & 1 \\
+			b & -5 \\
+			c & 6 \\
+			A & $\pi \times 6371^2$ \\
+			\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{solution}
+	\begin{rcode}
+		> (a = 1)
+		[1] 1
+		> (b <- -5)
+		[1] -5
+		> (6 -> c)
+		[1] 6
+		> (A = pi * 6371 ^ 2)
+		[1] 127516118
+	\end{rcode}
+Notas:
+\begin{itemize}
+\item Em \textbf{R}, existem três operadores de atribuição: \mintinline{R}{=}, \mintinline{R}{<-} e \mintinline{R}{->}, pode-se usar qualquer um deles, mas convém ser consistente na sua utilização durante a escrita do código;
+\item Colocando uma expressão de atribuição entre parêntesis é uma forma rápida de guardar o resultado e visualizá-lo de seguida, sem ter de se escrever o nome da variável.
+\end{itemize}
+\end{solution}
+
+\question Use as variáveis definidas na questão anterior para avaliar as seguintes expressões:
+\begin{itemize}
+	\item \rinline{A == a}
+	\item \rinline{A = a}
+	\item $\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$
+\end{itemize}
+
+\begin{solution}
+	\begin{rcode}
+		# O R é sensível às maiúsculas
+		> A == a
+		[1] FALSE
+		# deste modo perde-se o valor que estava guardado em A
+		> A = a
+		# e assim, agora, as duas variáveis já guardam o mesmo valor
+		> A == a
+		[1] TRUE
+		# exemplo com a fórmula resolvente
+		# é necessário calcular em dois passos, escrever -b +- sqrt(...) daria apenas o segundo zero
+		> (-b + sqrt(b ^ 2 - 4 * a * c)) / (2 * a)
+		[1] 3
+		> (-b - sqrt(b ^ 2 - 4 * a * c)) / (2 * a)
+		[1] 2
+	\end{rcode}
+Guardar o resultado de uma expressão, que pode ser complicada, numa variável auxiliar, pode ser uma forma de evitar repetição de código e de o tornar mais legível.
+\end{solution}
+
+\end{questions}
+
+\section{Vectores}
+
+Vectores constituem uma forma simples, mas poderosa, de armazenar informação em \textbf{R}, mas apenas de um só tipo. Uma forma fácil de criar vectores é  utilizando a função \rinline{c()}.
+
+\begin{questions}
+
+\question Crie um vector \rinline{notas} com as seguintes notas de um aluno: 13, 15, 12, 16, 10.
+
+\begin{solution}
+	\begin{rcode}
+		> (notas = c(13, 15, 12, 16, 10))
+		[1] 13 15 12 16 10
+	\end{rcode}
+\end{solution}
+
+\question Calcule a média do aluno.
+
+\begin{solution}
+	\begin{rcode}
+		> mean(notas)
+		[1] 13.2
+	\end{rcode}
+\end{solution}
+
+\question O aluno recebeu uma bonificação na suas notas. Acrescente um valor a cada nota existente no vector \rinline{notas}.
+
+\begin{solution}
+	\begin{rcode}
+		> (notas.bonus = notas + 1)
+		[1] 14 16 13 17 11
+	\end{rcode}
+\end{solution}
+
+\question Imagine, agora, que o valor de bónus pode ser de 1 ou 0,5 valores. Considere que a forma como é decidida a escolha de uma destas hipóteses (1 ou 0,5) não é relevante.
+
+\begin{solution}
+	\begin{rcode}
+		> (notas.bonus2 = notas + c(1, 0.5))
+		[1] 14.0 15.5 13.0 16.5 11.0
+		Warning message:
+		In notas + c(1, 0.5) :
+		longer object length is not a multiple of shorter object length
+	\end{rcode}
+	Repare que os elementos do vector \rinline{c(1, 0.5)} foram repetidos tantas vezes quantas as necessárias, até serem percorridas todos os elementos do vector \rinline{notas}. A mensagem de aviso dada pelo \textbf{R} informa que os dois vectores, \rinline{notas} e \rinline{c(1, 0.5)}, não têm comprimentos múltiplos (o primeiro tem 5 elementos, o outro tem apenas 2). Por esse motivo, o segundo elemento do vector menor foi repetido menos uma vez.
+	
+	Estas duas soluções mostram, assim, exemplos da \textit{regra da reciclagem}.
+\end{solution}
+
+\question Considere os seguintes vectores:
+
+	\begin{minted}{R}
+		a = c("L", 3, 3, T)
+		b = c(F, 4, 1, 7)
+	\end{minted}
+
+Explique o que aconteceu aos valores guardados em ambos os vectores.
+
+\begin{solution}
+	\begin{rcode}
+		> a = c("L", 3, 3, T)
+		> b = c(F, 4, 1, 7)
+		> a
+		[1] "L"    "3"    "3"    "TRUE"
+		> b
+		[1] 0 4 1 7
+	\end{rcode}
+	Vectores constituem uma forma simples, mas poderosa, de armazenar informação em \textbf{R}, mas apenas de um só tipo de cada vez. Os tipos de objecto existentes num vector é automaticamente convertido de modo a existir um único tipo.
+	
+	No caso do vector \rinline{a}, foram definidos objectos dos tipos \rinline{character}, \rinline{numeric} e \rinline{logical}, no entanto, o vector resultante contém apenas objectos do tipo \rinline{character} (repare nas aspas). O valor \rinline{T} (sem aspas) foi convertido para \rinline{"TRUE"}, pois \rinline{T} é apenas um \textit{atalho} para o valor lógico \rinline{TRUE} (o mesmo acontece com os valores \rinline{F} e \rinline{FALSE}).
+	
+	No segundo caso, o vector \rinline{b} foi definido com objectos de dois tipos: \rinline{logical} e \rinline{numeric}. O resultado é um vector de apenas valores numéricos, sendo que o valor lógico \rinline{FALSE} foi convertido para \rinline{0} (zero) (trata-se de uma convenção; o valor lógico \rinline{TRUE} teria sido convertido para \rinline{1}).
+	
+	A ordem de precedência com que estas conversões automáticas (coerção) se dão pode ser verificada no sistema de ajuda. O seguinte excerto foi retirado da ajuda da função \rinline{c()}, através do comando \rinline{?c}:
+	
+	\begin{quote}
+		The output type is determined from the highest type of the components in the hierarchy NULL $<$ raw $<$ logical $<$ integer $<$ double $<$ complex $<$ character $<$ list $<$ expression.
+	\end{quote}
+
+\end{solution}
+
+\end{questions}
+\end{document}
